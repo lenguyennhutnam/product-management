@@ -3,7 +3,7 @@ const router = express.Router();
 const controller = require("../../controllers/client/product.controller");
 
 router.get("/", controller.index);
-// router.patch("/edit", controller.edit);
-// router.get("/delete", controller.delete);
+router.get("/create", controller.create);
+router.delete("/delete", controller.delete);
 
 module.exports = router;

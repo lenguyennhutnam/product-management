@@ -1,15 +1,9 @@
-// [GET] /products
-
 module.exports.index = (req, res) => {
-    res.render("client/pages/products");
+    res.send("Prod index");
 };
-
-// [PATCH] /products/edit
-module.exports.edit = (req, res) => {
-    res.render("client/pages/products/edit");
+module.exports.create = (req, res) => {
+    res.send("Prod create");
 };
-
-// [DELETE] /products/delete
 module.exports.delete = (req, res) => {
-    res.render("client/pages/products/delete");
+    res.send("Prod delete");
 };
