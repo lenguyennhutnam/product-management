@@ -1,5 +1,5 @@
 module.exports.index = (req, res) => {
-    res.send("Prod index");
+    res.render("client/pages/products", {pageTitle: "Trang san pham"});
 };
 module.exports.create = (req, res) => {
     res.send("Prod create");

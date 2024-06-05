@@ -6,10 +6,9 @@ const routerClient = require("./routes/client/index.route");
 
 app.set("views", "./views");
 app.set("view engine", "pug");
+app.use(express.static('public'))
 
 routerClient.index(app);
-console.log(123);
-console["error"]("hehe");
 
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
