@@ -1,9 +1,14 @@
-module.exports.index = (req, res) => {
-    res.render("client/pages/products", {pageTitle: "Trang san pham"});
-};
-module.exports.create = (req, res) => {
-    res.send("Prod create");
-};
-module.exports.delete = (req, res) => {
-    res.send("Prod delete");
+const Product = require("../../models/product.model");
+
+// [GET] /products/
+module.exports.index = async (req, res) => {
+    const products = await Product.find({});
+    products.map((product) => {
+        return (product.newPrice =
+            ((1 - product.discountPercentage / 100) * product.price).toFixed(0));
+    });
+    res.render("client/pages/products", {
+        pageTitle: "Trang san pham",
+        products: products,
+    });
 };
