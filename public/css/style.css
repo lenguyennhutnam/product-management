@@ -9,17 +9,21 @@
     max-width: 100%;
 }
 
+.header .inner-menu{
+    margin-bottom: 20px;
+}
+
 .header .inner-menu>ul {
     list-style: none;
     padding: 0;
     margin: 0;
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: flex-start;
     flex-wrap: wrap;
 }
 
-.header .inner-menu>ul>li {
+.header .inner-menu>ul>li:nth-child(2) {
     margin-left: 20px;
 }
 

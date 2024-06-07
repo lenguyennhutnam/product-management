@@ -1,15 +1,20 @@
 header.header 
   .container 
     .row.align-items-center
-      .col-3
+      .col-12
+        .inner-menu
+          ul 
+            li
+              a(href="/") Trang chủ
+            li 
+              a(href="/products") Sản phẩm
+
+      .col-8
         .inner-logo
           a(href="/" )
             img(src="/images/shopeeLogo.svg" alt="logo")
 
-      .col-9
-        .inner-menu
-          ul 
-            li
-              a(href="/") Trang chu
-            li 
-              a(href="/products") San pham
+      .col-4
+        form(action="/") 
+          input(type="text")
+          button(type="submit") Tim kiem

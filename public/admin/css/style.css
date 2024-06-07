@@ -1,0 +1,67 @@
+/* Global */
+* {
+    list-style: none;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+/* End global */
+
+/* Header */
+.header {
+    background-color: #202020;
+    padding: 10px 0;
+    position: sticky;
+    z-index: 999;
+}
+
+.header .inner-logo a {
+    /* text-decoration: none; */
+    color: #fff;
+    font-size: 26px;
+    font-weight: bold;
+}
+
+/* End Header */
+
+/* Body */
+
+.body {
+    display: flex;
+}
+
+/* End body */
+
+/* Sider  */
+
+.sider {
+    width: 150px;
+    height: 100vh;
+    background-color: #323232;
+}
+
+.sider .inner-menu ul {
+    padding: 0;
+    margin: 0;
+    color: white;
+}
+
+.sider .inner-menu ul li a {
+    color: white;
+    display: block;
+    font-size: 18px;
+    padding: 6px 10px;
+    border-bottom: 1px solid #515151;
+}
+
+/* End sider */
+
+/* main */
+
+.main {
+    padding: 20px 15px;
+}
+
+/* End main */
