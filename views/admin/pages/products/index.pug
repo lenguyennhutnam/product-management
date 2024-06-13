@@ -50,12 +50,12 @@ block main
                 button(class="btn btn-danger btn-sm") Xóa
   nav
     ul(class="pagination")
-      //- li(class="page-item")
-      //-   button(class="page-link") Trang trước
+      li(class="page-item prev-page")
+        button(class="page-link") Trang trước
 
       - for (var i = 1; i <= pagination.totalPages; i++)
         li(class="page-item" page=i)
           button(class="page-link") #{i}
 
-      //- li(class="page-item")
-      //-   button(class="page-link") Kế tiếp
+      li(class="page-item next-page")
+        button(class="page-link") Kế tiếp
