@@ -22,12 +22,27 @@ module.exports.index = async (req, res) => {
         find.title = regex;
     }
 
-    const products = await Products.find(find);
+    // pagination
+    const pagination = {
+        currentPage: 1,
+        limit: 4,
+    };
+    if (req.query.page) {
+        pagination.currentPage = parseInt(req.query.page);
+    }
+    const numberOfPages =
+        (await Products.countDocuments(find)) / pagination.limit;
+    pagination.totalPages = Math.ceil(numberOfPages);
+    pagination.skip = (pagination.currentPage - 1) * pagination.limit;
+    const products = await Products.find(find)
+        .limit(pagination.limit)
+        .skip(pagination.skip);
 
     res.render("admin/pages/products", {
         pageTitle: "Products",
         products: products,
         keyword: keyword,
         filterStatus: filterStatus,
+        pagination: pagination,
     });
 };

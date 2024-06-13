@@ -48,3 +48,14 @@ block main
               td
                 button(class="btn btn-warning btn-sm") Sửa
                 button(class="btn btn-danger btn-sm") Xóa
+  nav
+    ul(class="pagination")
+      //- li(class="page-item")
+      //-   button(class="page-link") Trang trước
+
+      - for (var i = 1; i <= pagination.totalPages; i++)
+        li(class="page-item" page=i)
+          button(class="page-link") #{i}
+
+      //- li(class="page-item")
+      //-   button(class="page-link") Kế tiếp
