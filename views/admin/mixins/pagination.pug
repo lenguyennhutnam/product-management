@@ -1,0 +1,25 @@
+mixin pagination(pagination)
+  nav
+    ul(class="pagination" max-page=pagination.totalPages)
+      if pagination.currentPage > 1
+        //- home page
+        li(class="page-item" page=1)
+          button(class="page-link") Trang đầu
+        //- prev page
+        li(class="page-item" page=pagination.currentPage-1)
+          button(class="page-link") 
+            <span aria-hidden="true">&laquo;</span>
+            <span class="sr-only">Previous</span>
+
+      - for (var i = 1; i <= pagination.totalPages; i++)
+        li(class=("page-item " + (pagination.currentPage == i ? "active":"")) page=i)
+          button(class="page-link") #{i}
+      if pagination.currentPage < pagination.totalPages
+        //- next page
+        li(class="page-item" page=pagination.currentPage+1)
+          button(class="page-link") 
+            <span aria-hidden="true">&raquo;</span>
+            <span class="sr-only">Next</span>
+        //- end page
+        li(class="page-item" page=pagination.totalPages)
+          button(class="page-link") Trang cuối

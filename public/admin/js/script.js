@@ -1,5 +1,5 @@
 const url = new URL(window.location.href);
-const page = parseInt(url.searchParams.get("page") || 1);
+
 // LOAD PAGE
 // add class active to filter btn
 const clickedBtn = document.querySelector(
@@ -7,11 +7,6 @@ const clickedBtn = document.querySelector(
 );
 if (clickedBtn) {
     clickedBtn.classList.add("active");
-}
-// add class active to page btn
-const currPageBtn = document.querySelector(`[page="${page}"]`);
-if (currPageBtn) {
-    currPageBtn.classList.add("active");
 }
 // end
 
@@ -51,24 +46,3 @@ pageBtn.forEach((page) => {
         window.location.href = url.href;
     });
 });
-// previous page btn
-const previousPageBtn = document.querySelector(".prev-page");
-if (page == 1) {
-    previousPageBtn.classList.add("disabled");
-}
-previousPageBtn.addEventListener("click", () => {
-    if (page > 1) {
-        url.searchParams.set("page", page - 1);
-        window.location.href = url.href;
-    }
-});
-// next page btn
-const nextPageBtn = document.querySelector(".next-page");
-nextPageBtn.addEventListener("click", () => {
-    const totalPages = 10;
-    if (page < totalPages) {
-        url.searchParams.set("page", page + 1);
-        window.location.href = url.href;
-    }
-});
-// End Pagination

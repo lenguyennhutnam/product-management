@@ -1,4 +1,5 @@
 const Products = require("../../models/product.model");
+const paginationHelper = require("../../helpers/pagination.helper.js");
 // [GET] /admin/products
 module.exports.index = async (req, res) => {
     const find = {
@@ -21,23 +22,12 @@ module.exports.index = async (req, res) => {
         const regex = new RegExp(keyword, "i");
         find.title = regex;
     }
-
     // pagination
-    const pagination = {
-        currentPage: 1,
-        limit: 4,
-    };
-    if (req.query.page) {
-        pagination.currentPage = parseInt(req.query.page);
-    }
-    const numberOfPages =
-        (await Products.countDocuments(find)) / pagination.limit;
-    pagination.totalPages = Math.ceil(numberOfPages);
-    pagination.skip = (pagination.currentPage - 1) * pagination.limit;
+    const pagination = await paginationHelper.pagination(req, find);
+
     const products = await Products.find(find)
         .limit(pagination.limit)
         .skip(pagination.skip);
-
     res.render("admin/pages/products", {
         pageTitle: "Products",
         products: products,
@@ -45,4 +35,12 @@ module.exports.index = async (req, res) => {
         filterStatus: filterStatus,
         pagination: pagination,
     });
+};
+
+// [GET] /admin/products/change-status/:id
+module.exports.changeStatus = async (req, res) => {
+    const changeProduct = await Products.findOne({ _id: req.params.id });
+    const newStatus = changeProduct.status == "active" ? "inactive" : "active";
+    await Products.updateOne({ _id: req.params.id }, { status: newStatus });
+    res.redirect("back");
 };

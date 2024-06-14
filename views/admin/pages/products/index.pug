@@ -1,6 +1,7 @@
 extends ../../layouts/default.pug
 include ../../mixins/filter-status.pug
 include ../../mixins/form-search.pug
+include ../../mixins/pagination.pug
 
 block main 
   h1(class="mb-4") Quản lý sản phẩm
@@ -41,21 +42,17 @@ block main
               td #{product.price}
               td
                 if product.status == 'active' 
-                  a(href="#" class="badge badge-success") Hoạt động
+                  a(
+                  href=`/${prefixAdmin}/products/change-status/${product.id}` 
+                  class="badge badge-success"
+                  ) Hoạt động 
                 else 
-                  a(href="#" class="badge badge-danger") Ngừng hoạt động
+                  a(
+                  href=`/${prefixAdmin}/products/change-status/${product.id}` 
+                  class="badge badge-danger"
+                  ) Ngừng hoạt động 
 
               td
                 button(class="btn btn-warning btn-sm") Sửa
                 button(class="btn btn-danger btn-sm") Xóa
-  nav
-    ul(class="pagination")
-      li(class="page-item prev-page")
-        button(class="page-link") Trang trước
-
-      - for (var i = 1; i <= pagination.totalPages; i++)
-        li(class="page-item" page=i)
-          button(class="page-link") #{i}
-
-      li(class="page-item next-page")
-        button(class="page-link") Kế tiếp
+  +pagination(pagination)
