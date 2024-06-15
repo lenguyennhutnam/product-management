@@ -37,10 +37,13 @@ module.exports.index = async (req, res) => {
     });
 };
 
-// [GET] /admin/products/change-status/:id
+// [PATCH] /admin/products/change-status/:id
 module.exports.changeStatus = async (req, res) => {
     const changeProduct = await Products.findOne({ _id: req.params.id });
     const newStatus = changeProduct.status == "active" ? "inactive" : "active";
     await Products.updateOne({ _id: req.params.id }, { status: newStatus });
-    res.redirect("back");
+    res.json({
+        code: 200,
+    });
+    // res.redirect("back");
 };

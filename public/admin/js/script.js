@@ -46,3 +46,24 @@ pageBtn.forEach((page) => {
         window.location.href = url.href;
     });
 });
+
+// Change status
+const changeStatusBtns = document.querySelectorAll("[change-status-btn]");
+changeStatusBtns.forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+        const productId = btn.getAttribute("product-id");
+        const API = `/admin/products/change-status/${productId}`;
+        fetch(API, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.code == 200) {
+                    window.location.reload();
+                }
+            });
+    });
+});
