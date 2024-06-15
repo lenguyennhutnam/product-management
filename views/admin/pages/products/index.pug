@@ -2,59 +2,66 @@ extends ../../layouts/default.pug
 include ../../mixins/filter-status.pug
 include ../../mixins/form-search.pug
 include ../../mixins/pagination.pug
+include ../../mixins/card-head.pug
+
 
 block main 
   h1(class="mb-4") Quản lý sản phẩm
-  .card.mb-3
-    .card-header Bộ lọc và tìm kiếm
-    .card-body
-      .row
-        .col-6
-          +filter-status(filterStatus)
-        .col-6
-          +form-search()
-  .card.mb-3
-    .card-header Danh sách
-    .card-body
-      table.table.table-hover.table-sm
-        thead 
-          tr 
-            th STT
-            th Hình ảnh
-            th Tiêu đề
-            th Giá
-            th Trạng thái
-            th Hành động
+  +card-head("Bộ lọc và tìm kiếm")
+    .row
+      .col-6
+        +filter-status(filterStatus)
+      .col-6
+        +form-search()
+  +card-head("Trạng thái")
+    .row.justify-content-between
+      .col-8
+        select()
+          option() Hoạt động
+          option() Ngừng hoạt động
+      .col-4
+        button(class="btn btn-success align-self-end" update-multi-status-btn) Cập nhật
+  +card-head("Danh sách")
+    table.table.table-hover.table-sm
+      thead 
+        tr 
+          th 
+            input(type="checkbox" name="activeAll")
+          th STT
+          th Hình ảnh
+          th Tiêu đề
+          th Giá
+          th Trạng thái
+          th Hành động
+      tbody 
+        each product, index in products 
+          tr(product-id=product.id) 
+            td 
+              input(type="checkbox" name="isActive")
+            td #{index + 1}
+            td
+              .img-box(style="width: 60px; height: 60px;")
+                img(
+                  class="img-thumbnail"
+                  src = product.thumbnail
+                  width = "auto"
+                  height = "100px"
+                ) 
+            td #{product.title}
+            td #{product.price}
+            td
+              if product.status == 'active' 
+                button(
+                class="badge btn btn-success"
+                change-status-btn
+                ) Hoạt động 
+              else 
+                button(
+                class="badge btn btn-danger"
+                change-status-btn
+                ) Ngừng hoạt động 
 
-        tbody 
-          each product, index in products 
-            tr 
-              td #{index + 1}
-              td
-                .img-box(style="width: 60px; height: 60px;")
-                  img(
-                    class="img-thumbnail"
-                    src = product.thumbnail
-                    width = "auto"
-                    height = "100px"
-                  ) 
-              td #{product.title}
-              td #{product.price}
-              td
-                if product.status == 'active' 
-                  button(
-                  product-id=product.id 
-                  class="badge btn btn-success"
-                  change-status-btn
-                  ) Hoạt động 
-                else 
-                  button(
-                  product-id=product.id 
-                  class="badge btn btn-danger"
-                  change-status-btn
-                  ) Ngừng hoạt động 
-
-              td
-                button(class="btn btn-warning btn-sm") Sửa
-                button(class="btn btn-danger btn-sm") Xóa
-  +pagination(pagination)
+            td
+              button(class="btn btn-warning btn-sm") Sửa
+              button(class="btn btn-danger btn-sm") Xóa
+    +pagination(pagination)
