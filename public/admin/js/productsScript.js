@@ -1,3 +1,5 @@
+import { actionBoxSubmit } from "./helper/checkActionLogic.js";
+
 const url = new URL(window.location.href);
 
 // LOAD PAGE
@@ -70,44 +72,7 @@ changeStatusBtns.forEach((btn) => {
 // End change status
 
 // Change multi status
-const activeAllBtn = document.querySelector("input[name='activeAll']");
-const isActiveBtns = document.querySelectorAll("input[name='isActive']");
-// active all event
-activeAllBtn.addEventListener("change", (e) => {
-    isActiveBtns.forEach((btn) => {
-        btn.checked = e.target.checked;
-    });
-});
-// check active event
-isActiveBtns.forEach((btn) => {
-    btn.addEventListener("change", (e) => {
-        const isActiveBtnChecked = document.querySelectorAll(
-            "input[name='isActive']:checked"
-        );
-        if (isActiveBtnChecked.length == isActiveBtns.length) {
-            activeAllBtn.checked = true;
-        } else {
-            activeAllBtn.checked = false;
-        }
-    });
-});
-// update multi status btn
-const updateMultiStatusBtn = document.querySelector(
-    "button[update-multi-status-btn]"
-);
-const statusSelect = document.querySelector("[status-select]");
-updateMultiStatusBtn.addEventListener("click", (e) => {
-    const isActiveBtnChecked = document.querySelectorAll(
-        "input[name='isActive']:checked"
-    );
-    const productIds = Array.from(isActiveBtnChecked).map((btn) => {
-        return btn.closest("tr").getAttribute("product-id");
-    });
-    const newStatus = statusSelect.value;
-    const updateStatusData = {
-        productIds: productIds,
-        newStatus: newStatus,
-    };
+const fetchAction = (updateStatusData) => {
     fetch("/admin/products/change-multi-status", {
         method: "PATCH",
         headers: {
@@ -121,6 +86,25 @@ updateMultiStatusBtn.addEventListener("click", (e) => {
                 window.location.reload();
             }
         });
-});
-
+};
+actionBoxSubmit(fetchAction);
 // End change multi status
+
+// Send product to trashbin
+const trashBtn = document.querySelectorAll("[send-to-trash]");
+trashBtn.forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+        const productId = btn.closest("tr").getAttribute("product-id");
+        const deleteAPI = `/admin/products/delete/${productId}`;
+        fetch(deleteAPI, {
+            method: "PATCH",
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.code == 200) {
+                    window.location.reload();
+                }
+            });
+    });
+});
+// End send product to trashbin

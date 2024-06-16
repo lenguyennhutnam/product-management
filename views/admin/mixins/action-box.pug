@@ -1,0 +1,7 @@
+mixin action-box(actions)
+  .input-group.action-box
+    select(class="custom-select")
+      each action in actions
+        option(value=action.value) #{action.title}
+    .input-group-append
+      button(class="btn btn-success") Cập nhật

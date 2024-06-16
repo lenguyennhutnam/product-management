@@ -3,6 +3,7 @@ include ../../mixins/filter-status.pug
 include ../../mixins/form-search.pug
 include ../../mixins/pagination.pug
 include ../../mixins/card-head.pug
+include ../../mixins/action-box.pug
 
 
 block main 
@@ -14,18 +15,16 @@ block main
       .col-6
         +form-search()
   +card-head("Trạng thái")
-    .input-group
-      select(class="custom-select" status-select)
-        option(value="active") Hoạt động
-        option(value="inactive") Ngừng hoạt động
-      .input-group-append
-        button(class="btn btn-success" update-multi-status-btn) Cập nhật
+    +action-box([
+      {value: "active", title: "Hoạt động"},
+      {value: "inactive", title: "Ngưng hoạt động"}
+    ])
   +card-head("Danh sách")
     table.table.table-hover.table-sm
       thead 
         tr 
           th 
-            input(type="checkbox" name="activeAll")
+            input(type="checkbox" name="actionCheckAll")
           th STT
           th Hình ảnh
           th Tiêu đề
@@ -36,7 +35,7 @@ block main
         each product, index in products 
           tr(product-id=product.id) 
             td 
-              input(type="checkbox" name="isActive")
+              input(type="checkbox" name="actionChecked")
             td #{index + 1}
             td
               .img-box(style="width: 60px; height: 60px;")
@@ -61,6 +60,7 @@ block main
                 ) Ngừng hoạt động 
 
             td
-              button(class="btn btn-warning btn-sm") Sửa
-              button(class="btn btn-danger btn-sm") Xóa
+              button(class="btn btn-warning btn-sm" edit) Sửa
+              button(class="btn btn-danger btn-sm" send-to-trash) Xóa
     +pagination(pagination)
+  script(type="module" src="/admin/js/productsScript.js")

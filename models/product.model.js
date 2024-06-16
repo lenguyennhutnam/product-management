@@ -10,7 +10,7 @@ const productSchema = new mongoose.Schema({
     status: String,
     position: Number,
     deleted: Boolean,
+    timeDelete: Date,
 });
 
-module.exports = mongoose.model("Product", productSchema,"products");
-
+module.exports = mongoose.model("Product", productSchema, "products");

@@ -1,5 +1,6 @@
 const Products = require("../../models/product.model");
 const paginationHelper = require("../../helpers/pagination.helper.js");
+const convertDateTime = require("../../helpers/convertDateTime.helper.js");
 // [GET] /admin/products
 module.exports.index = async (req, res) => {
     const find = {
@@ -49,9 +50,22 @@ module.exports.changeStatus = async (req, res) => {
 
 // [PATCH] /admin/products/change-multi-status
 module.exports.changeMultiStatus = async (req, res) => {
-    const { newStatus, productIds } = req.body;
+    const { action, productIds } = req.body;
     if (productIds.length > 0) {
-        await Products.updateMany({ _id: productIds }, { status: newStatus });
+        await Products.updateMany({ _id: productIds }, { status: action });
+    }
+    res.json({ code: 200 });
+};
+
+// [PATCH] /admin/products/delete/:id
+module.exports.delete = async (req, res) => {
+    const productId = req.params.id;
+    const currdate = new Date();
+    if (productId) {
+        await Products.updateOne(
+            { _id: productId },
+            { deleted: true, timeDelete: currdate }
+        );
     }
     res.json({ code: 200 });
 };

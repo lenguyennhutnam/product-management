@@ -1,0 +1,58 @@
+extends ../../layouts/default.pug
+include ../../mixins/filter-status.pug
+include ../../mixins/form-search.pug
+include ../../mixins/pagination.pug
+include ../../mixins/card-head.pug
+include ../../mixins/action-box.pug
+
+
+block main 
+  h1(class="mb-4") Thùng rác
+  +card-head("Tìm kiếm")
+    .row
+      .col-6
+      .col-6
+        +form-search()
+  +card-head("Hành động")
+    +action-box([
+      {value: "recovery", title: "Khôi phục"},
+      {value: "delete", title: "Xóa"},
+    ])
+  +card-head("Sản phẩm đã xóa")
+    table.table.table-hover.table-sm
+      thead 
+        tr 
+          th 
+            input(type="checkbox" name="actionCheckAll")
+          th STT
+          th Hình ảnh
+          th Tiêu đề
+          th Giá
+          th Thời gian xóa
+          th Hành động
+      if products.length > 0
+        tbody 
+          each product, index in products 
+            tr(product-id=product.id) 
+              td 
+                input(type="checkbox" name="actionChecked")
+              td #{index + 1}
+              td
+                .img-box(style="width: 60px; height: 60px;")
+                  img(
+                    class="img-thumbnail"
+                    src = product.thumbnail
+                    width = "auto"
+                    height = "100px"
+                  ) 
+              td #{product.title}
+              td #{product.price}
+              td #{product.timeDelete.time} #{product.timeDelete.date}
+              td
+                button(class="btn btn-success btn-sm" recovery) Khôi phục
+                button(class="btn btn-danger btn-sm" permanent-delete) Xóa vĩnh viễn
+    if products.length > 0
+      +pagination(pagination)
+    else 
+      p Không có sản phẩm trong thùng rác
+  script(type="module" src="/admin/js/trashbinScript.js")
