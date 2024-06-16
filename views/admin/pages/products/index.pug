@@ -14,13 +14,12 @@ block main
       .col-6
         +form-search()
   +card-head("Trạng thái")
-    .row.justify-content-between
-      .col-8
-        select()
-          option() Hoạt động
-          option() Ngừng hoạt động
-      .col-4
-        button(class="btn btn-success align-self-end" update-multi-status-btn) Cập nhật
+    .input-group
+      select(class="custom-select" status-select)
+        option(value="active") Hoạt động
+        option(value="inactive") Ngừng hoạt động
+      .input-group-append
+        button(class="btn btn-success" update-multi-status-btn) Cập nhật
   +card-head("Danh sách")
     table.table.table-hover.table-sm
       thead 

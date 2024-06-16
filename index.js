@@ -10,6 +10,12 @@ const routerAdmin = require("./routes/admin/index.route");
 const database = require("./config/database");
 database.connect();
 
+// parse application/x-www-form-urlencoded
+app.use(express.urlencoded({ extended: true }));
+
+// parse application/json
+app.use(express.json());
+
 app.set("views", "./views");
 app.set("view engine", "pug");
 app.use(express.static("public"));

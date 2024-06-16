@@ -72,9 +72,6 @@ changeStatusBtns.forEach((btn) => {
 // Change multi status
 const activeAllBtn = document.querySelector("input[name='activeAll']");
 const isActiveBtns = document.querySelectorAll("input[name='isActive']");
-const updateMultiStatusBtn = document.querySelector(
-    "button[update-multi-status-btn]"
-);
 // active all event
 activeAllBtn.addEventListener("change", (e) => {
     isActiveBtns.forEach((btn) => {
@@ -95,14 +92,35 @@ isActiveBtns.forEach((btn) => {
     });
 });
 // update multi status btn
+const updateMultiStatusBtn = document.querySelector(
+    "button[update-multi-status-btn]"
+);
+const statusSelect = document.querySelector("[status-select]");
 updateMultiStatusBtn.addEventListener("click", (e) => {
     const isActiveBtnChecked = document.querySelectorAll(
         "input[name='isActive']:checked"
     );
-    const checkedId = Array.from(isActiveBtnChecked).map((btn) => {
-        console.log(btn.closest("tr").getAttribute("product-id"));
+    const productIds = Array.from(isActiveBtnChecked).map((btn) => {
         return btn.closest("tr").getAttribute("product-id");
     });
-    console.log(checkedId);
+    const newStatus = statusSelect.value;
+    const updateStatusData = {
+        productIds: productIds,
+        newStatus: newStatus,
+    };
+    fetch("/admin/products/change-multi-status", {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updateStatusData),
+    })
+        .then((res) => res.json())
+        .then((data) => {
+            if (data.code == 200) {
+                window.location.reload();
+            }
+        });
 });
+
 // End change multi status

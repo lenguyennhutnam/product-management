@@ -45,5 +45,13 @@ module.exports.changeStatus = async (req, res) => {
     res.json({
         code: 200,
     });
-    // res.redirect("back");
+};
+
+// [PATCH] /admin/products/change-multi-status
+module.exports.changeMultiStatus = async (req, res) => {
+    const { newStatus, productIds } = req.body;
+    if (productIds.length > 0) {
+        await Products.updateMany({ _id: productIds }, { status: newStatus });
+    }
+    res.json({ code: 200 });
 };
