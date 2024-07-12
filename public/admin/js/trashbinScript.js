@@ -41,11 +41,10 @@ recoveryBtn.forEach((btn) => {
 
 // recovery, delete multi product
 const fetchAction = (actionData) => {
-    let actionAPI
+    let actionAPI;
     if (actionData.action == "recovery") {
         actionAPI = "/admin/trashbin/recovery-many";
-    }
-    else if(actionData.action == "delete"){
+    } else if (actionData.action == "delete") {
         actionAPI = "/admin/trashbin/delete-many";
     }
     fetch(actionAPI, {
@@ -64,3 +63,22 @@ const fetchAction = (actionData) => {
 };
 actionBoxSubmit(fetchAction);
 // End recovery, delete multi product
+
+// Delete product
+const deleteBtn = document.querySelectorAll("[permanent-delete");
+deleteBtn.forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+        const productId = btn.closest("tr").getAttribute("product-id");
+        const API = `/admin/trashbin/delete/${productId}`;
+        fetch(API, {
+            method: "DELETE",
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.code == 200) {
+                    window.location.reload();
+                }
+            });
+    });
+});
+// End delete product

@@ -21,7 +21,10 @@ module.exports.index = async (req, res) => {
     const products = await Products.find(find)
         .limit(pagination.limit)
         .skip(pagination.skip)
-        .lean();
+        .lean()
+        .sort({
+            timeDelete: "desc",
+        });
     products.forEach((product) => {
         product.timeDelete = convertDateTime(product.timeDelete);
         product.id = product._id;
@@ -38,6 +41,7 @@ module.exports.index = async (req, res) => {
 module.exports.recovery = async (req, res) => {
     const productId = req.params.id;
     if (productId) {
+        req.flash("success", "Khôi phục thành công");
         await Products.updateOne(
             { _id: productId },
             { deleted: false, status: "inactive" }
@@ -50,6 +54,7 @@ module.exports.recovery = async (req, res) => {
 module.exports.delete = async (req, res) => {
     const productId = req.params.id;
     if (productId) {
+        req.flash("error", "Sản phẩm đã được xóa vĩnh viễn");
         await Products.deleteOne({ _id: productId });
     }
     res.json({ code: 200 });
@@ -58,12 +63,14 @@ module.exports.delete = async (req, res) => {
 // [PATCH] /admin/trashbin/recovery-many
 module.exports.recoveryMany = async (req, res) => {
     const { productIds } = req.body;
+    req.flash("success", `Khôi phục thành công ${productIds.length} sản phẩm`);
     await Products.updateMany({ _id: productIds }, { deleted: false });
     res.json({ code: 200 });
 };
 // [DELETE] /admin/trashbin/delete-many
 module.exports.deleteMany = async (req, res) => {
     const { productIds } = req.body;
+    req.flash("error", `${productIds.length} sản phẩm đã được xóa vĩnh viễn`);
     await Products.deleteMany({ _id: productIds });
     res.json({ code: 200 });
 };

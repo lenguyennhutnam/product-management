@@ -4,7 +4,7 @@ include ../../mixins/form-search.pug
 include ../../mixins/pagination.pug
 include ../../mixins/card-head.pug
 include ../../mixins/action-box.pug
-
+include ../../mixins/alert.pug
 
 block main 
   h1(class="mb-4") Quản lý sản phẩm
@@ -17,9 +17,15 @@ block main
   +card-head("Trạng thái")
     +action-box([
       {value: "active", title: "Hoạt động"},
-      {value: "inactive", title: "Ngưng hoạt động"}
+      {value: "inactive", title: "Ngưng hoạt động"},
+      {value: "toTrash", title: "Xóa"}
     ])
   +card-head("Danh sách")
+    .text-right.mb-3
+      a(
+        href=`/${prefixAdmin}/products/create`
+        class="btn btn-outline-success"
+      ) + Thêm mới
     table.table.table-hover.table-sm
       thead 
         tr 
@@ -31,6 +37,7 @@ block main
           th Giá
           th Trạng thái
           th Hành động
+          th Vị trí
       tbody 
         each product, index in products 
           tr(product-id=product.id) 
@@ -47,6 +54,13 @@ block main
                 ) 
             td #{product.title}
             td #{product.price}
+            td 
+              input(
+              type = "number"
+              name = "position"
+              value = product.position 
+              style="width:60px" 
+              min="0")
             td
               if product.status == 'active' 
                 button(
@@ -58,7 +72,6 @@ block main
                 class="badge btn btn-danger"
                 change-status-btn
                 ) Ngừng hoạt động 
-
             td
               button(class="btn btn-warning btn-sm" edit) Sửa
               button(class="btn btn-danger btn-sm" send-to-trash) Xóa

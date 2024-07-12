@@ -71,9 +71,13 @@ changeStatusBtns.forEach((btn) => {
 });
 // End change status
 
-// Change multi status
+//Multi action
 const fetchAction = (updateStatusData) => {
-    fetch("/admin/products/change-multi-status", {
+    let actionApi = "change-multi-status";
+    if (updateStatusData.action == "toTrash") {
+        actionApi = "delete-multi";
+    }
+    fetch(`/admin/products/${actionApi}`, {
         method: "PATCH",
         headers: {
             "Content-Type": "application/json",
@@ -88,7 +92,7 @@ const fetchAction = (updateStatusData) => {
         });
 };
 actionBoxSubmit(fetchAction);
-// End change multi status
+// End multi action
 
 // Send product to trashbin
 const trashBtn = document.querySelectorAll("[send-to-trash]");
@@ -108,3 +112,34 @@ trashBtn.forEach((btn) => {
     });
 });
 // End send product to trashbin
+
+// Set position
+const posInput = document.querySelectorAll("input[name=position]");
+posInput.forEach((input) => {
+    input.addEventListener("change", (e) => {
+        const productId = input.closest("tr").getAttribute("product-id");
+        const API = `/admin/products/change-position`;
+        fetch(API, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                productId: productId,
+                position: input.value,
+            }),
+        });
+    });
+});
+// End set position
+
+// Show alert
+const showAlert = document.querySelector(".show-alert");
+if (showAlert) {
+    let time = showAlert.getAttribute("show-alert") || 2000;
+    time = parseInt(time);
+    setTimeout(() => {
+        showAlert.classList.add("hidden");
+    }, time);
+}
+// End show alert

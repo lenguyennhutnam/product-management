@@ -1,5 +1,8 @@
 const express = require("express");
 const app = express();
+const flash = require("express-flash");
+const cookieParser = require("cookie-parser");
+const session = require("express-session");
 
 require("dotenv").config();
 const systemConfig = require("./config/system");
@@ -15,6 +18,12 @@ app.use(express.urlencoded({ extended: true }));
 
 // parse application/json
 app.use(express.json());
+
+// Flash
+app.use(cookieParser("keyboard cat"));
+app.use(session({ cookie: { maxAge: 2000 } }));
+app.use(flash());
+// End flash
 
 app.set("views", "./views");
 app.set("view engine", "pug");
