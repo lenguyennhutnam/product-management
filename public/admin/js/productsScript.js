@@ -2,24 +2,26 @@ import { actionBoxSubmit } from "./helper/checkActionLogic.js";
 
 // Change status
 const changeStatusBtns = document.querySelectorAll("[change-status-btn]");
-changeStatusBtns.forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-        const productId = btn.closest("tr").getAttribute("product-id");
-        const API = `/admin/products/change-status/${productId}`;
-        fetch(API, {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                if (data.code == 200) {
-                    window.location.reload();
-                }
-            });
+if (changeStatusBtns) {
+    changeStatusBtns.forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+            const productId = btn.closest("tr").getAttribute("product-id");
+            const API = `/admin/products/change-status/${productId}`;
+            fetch(API, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    if (data.code == 200) {
+                        window.location.reload();
+                    }
+                });
+        });
     });
-});
+}
 // End change status
 
 //Multi action
@@ -47,22 +49,41 @@ actionBoxSubmit(fetchAction);
 
 // Send product to trashbin
 const trashBtn = document.querySelectorAll("[send-to-trash]");
-trashBtn.forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-        const productId = btn.closest("tr").getAttribute("product-id");
-        const deleteAPI = `/admin/products/delete/${productId}`;
-        fetch(deleteAPI, {
-            method: "PATCH",
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                if (data.code == 200) {
-                    window.location.reload();
-                }
-            });
+if (trashBtn) {
+    trashBtn.forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+            const productId = btn.closest("tr").getAttribute("product-id");
+            const deleteAPI = `/admin/products/delete/${productId}`;
+            fetch(deleteAPI, {
+                method: "PATCH",
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    if (data.code == 200) {
+                        window.location.reload();
+                    }
+                });
+        });
     });
-});
+}
 // End send product to trashbin
+
+// Edit product
+const editBtn = document.querySelectorAll("[edit]");
+if (editBtn) {
+    editBtn.forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+            const productId = btn.closest("tr").getAttribute("product-id");
+            const editAPI = `/admin/products/edit/${productId}`;
+            window.location.href = editAPI;
+            return;
+            // fetch(editAPI, {
+            //     method: "GET",
+            // })
+        });
+    });
+}
+// End edit product
 
 // Set position
 const posInput = document.querySelectorAll("input[name=position]");

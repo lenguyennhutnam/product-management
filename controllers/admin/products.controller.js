@@ -104,17 +104,72 @@ module.exports.createPage = async (req, res) => {
 
 // [POST] /admin/products/create
 module.exports.create = async (req, res) => {
+    //upload file
     if (req.file && req.file.filename) {
         req.body.thumbnail = `/uploads/${req.file.filename}`;
     }
-
-    req.body.price = parseInt(req.body.price);
-    req.body.discountPercentage = parseInt(req.body.discountPercentage);
-    req.body.stock = parseInt(req.body.stock);
+    //parse to db type
+    req.body.price = parseInt(req.body.price) || 0;
+    req.body.discountPercentage = parseInt(req.body.discountPercentage) || 0;
+    req.body.stock = parseInt(req.body.stock) || 0;
     const numberProduct = await Product.countDocuments({});
 
     req.body.position = parseInt(req.body.position) || numberProduct + 1;
     const newProduct = new Product(req.body);
     await newProduct.save();
     res.redirect(`/${systemConfig.prefixAdmin}/products`);
+};
+
+// [GET] /admin/products/edit/:id
+module.exports.editPage = async (req, res) => {
+    try {
+        const id = req.params.id;
+
+        const product = await Product.findOne({
+            _id: id,
+            deleted: false,
+        });
+
+        if (product) {
+            res.render("admin/pages/products/edit", {
+                pageTitle: "Chỉnh sửa sản phẩm",
+                product: product,
+            });
+        } else {
+            res.redirect(`/${systemConfig.prefixAdmin}/products`);
+        }
+    } catch (error) {
+        res.redirect(`/${systemConfig.prefixAdmin}/products`);
+    }
+};
+// [PATCH] /admin/products/edit/:id
+module.exports.edit = async (req, res) => {
+    try {
+        const id = req.params.id;
+        //upload file
+        if (req.file && req.file.filename) {
+            req.body.thumbnail = `/uploads/${req.file.filename}`;
+        }
+        //parse to db type
+        req.body.price = parseInt(req.body.price) || 0;
+        req.body.discountPercentage =
+            parseInt(req.body.discountPercentage) || 0;
+        req.body.stock = parseInt(req.body.stock) || 0;
+        const numberProduct = await Product.countDocuments({});
+
+        req.body.position = parseInt(req.body.position) || numberProduct + 1;
+        console.log(req.body);
+        await Product.updateOne(
+            {
+                _id: id,
+                deleted: false,
+            },
+            req.body
+        );
+
+        req.flash("success", "Cập nhật sản phẩm thành công!");
+    } catch (error) {
+        req.flash("error", "Id sản phẩm không hợp lệ!");
+    }
+    res.redirect("back");
 };

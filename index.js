@@ -3,6 +3,7 @@ const app = express();
 const flash = require("express-flash");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
+const methodOverride = require('method-override')
 
 require("dotenv").config();
 const systemConfig = require("./config/system");
@@ -15,7 +16,8 @@ database.connect();
 
 // parse application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
-
+// override with POST having ?_method=PATCH
+app.use(methodOverride('_method'))
 // parse application/json
 app.use(express.json());
 
