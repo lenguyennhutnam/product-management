@@ -1,24 +1,4 @@
 import { actionBoxSubmit } from "./helper/checkActionLogic.js";
-const url = new URL(window.location.href);
-
-// Form search
-const formSearch = document.querySelector("#form-search");
-formSearch.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const inputValue = e.target.querySelector("input").value;
-    url.searchParams.set("keyword", inputValue);
-    window.location.href = url.href;
-});
-// end form search
-
-// Pagination
-const pageBtn = document.querySelectorAll("[page]");
-pageBtn.forEach((page) => {
-    page.addEventListener("click", () => {
-        url.searchParams.set("page", page.getAttribute("page"));
-        window.location.href = url.href;
-    });
-});
 
 // recovery
 const recoveryBtn = document.querySelectorAll("[recovery]");
