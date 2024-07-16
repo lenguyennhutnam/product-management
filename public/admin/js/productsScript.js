@@ -3,6 +3,7 @@ import { actionBoxSubmit } from "./helper/checkActionLogic.js";
 // Change status
 const changeStatusBtns = document.querySelectorAll("[change-status-btn]");
 if (changeStatusBtns) {
+    console.log(123);
     changeStatusBtns.forEach((btn) => {
         btn.addEventListener("click", (e) => {
             const productId = btn.closest("tr").getAttribute("product-id");
