@@ -41,13 +41,18 @@ module.exports.index = async (req, res) => {
 };
 // [PATCH] /admin/products/change-status/:id
 module.exports.changeStatus = async (req, res) => {
-    req.flash("success", "Cập nhật thành công");
-    const changeProduct = await Product.findOne({ _id: req.params.id });
-    const newStatus = changeProduct.status == "active" ? "inactive" : "active";
-    await Product.updateOne({ _id: req.params.id }, { status: newStatus });
-    res.json({
-        code: 200,
-    });
+    try {
+        req.flash("success", "Cập nhật thành công");
+        const changeProduct = await Product.findOne({ _id: req.params.id });
+        const newStatus =
+            changeProduct.status == "active" ? "inactive" : "active";
+        await Product.updateOne({ _id: req.params.id }, { status: newStatus });
+        res.json({
+            code: 200,
+        });
+    } catch (err) {
+        res.redirect("back");
+    }
 };
 // [PATCH] /admin/products/change-multi-status
 module.exports.changeMultiStatus = async (req, res) => {
@@ -62,14 +67,18 @@ module.exports.changeMultiStatus = async (req, res) => {
 module.exports.delete = async (req, res) => {
     const productId = req.params.id;
     const currdate = new Date();
-    if (productId) {
-        req.flash("success", "Đã chuyển sản phẩm vào thùng rác");
-        await Product.updateOne(
-            { _id: productId },
-            { deleted: true, timeDelete: currdate }
-        );
+    try {
+        if (productId) {
+            req.flash("success", "Đã chuyển sản phẩm vào thùng rác");
+            await Product.updateOne(
+                { _id: productId },
+                { deleted: true, timeDelete: currdate }
+            );
+        }
+        res.json({ code: 200 });
+    } catch (err) {
+        res.redirect("back");
     }
-    res.json({ code: 200 });
 };
 // [PATCH] /admin/products/deleteMulti
 module.exports.deleteMulti = async (req, res) => {
@@ -142,6 +151,7 @@ module.exports.editPage = async (req, res) => {
         res.redirect(`/${systemConfig.prefixAdmin}/products`);
     }
 };
+
 // [PATCH] /admin/products/edit/:id
 module.exports.edit = async (req, res) => {
     try {
@@ -153,10 +163,10 @@ module.exports.edit = async (req, res) => {
         //parse to db type
         req.body.price = parseInt(req.body.price) || 0;
         req.body.discountPercentage =
-            parseInt(req.body.discountPercentage) || 0;
+        parseInt(req.body.discountPercentage) || 0;
         req.body.stock = parseInt(req.body.stock) || 0;
         const numberProduct = await Product.countDocuments({});
-
+        
         req.body.position = parseInt(req.body.position) || numberProduct + 1;
         console.log(req.body);
         await Product.updateOne(
@@ -166,10 +176,33 @@ module.exports.edit = async (req, res) => {
             },
             req.body
         );
-
+        
         req.flash("success", "Cập nhật sản phẩm thành công!");
     } catch (error) {
         req.flash("error", "Id sản phẩm không hợp lệ!");
     }
     res.redirect("back");
+};
+
+// [GET] /admin/products/detail/:id
+module.exports.detail = async (req, res) => {
+    try {
+        const id = req.params.id;
+
+        const product = await Product.findOne({
+            _id: id,
+            deleted: false,
+        });
+
+        if (product) {
+            res.render("admin/pages/products/detail", {
+                pageTitle: "Chi tiết sản phẩm",
+                product: product,
+            });
+        } else {
+            res.redirect(`/${systemConfig.prefixAdmin}/products`);
+        }
+    } catch (error) {
+        res.redirect(`/${systemConfig.prefixAdmin}/products`);
+    }
 };

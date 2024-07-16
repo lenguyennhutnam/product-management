@@ -75,8 +75,21 @@ if (uploadImage) {
         const file = uploadImageInput.files[0];
         if (file) {
             uploadImagePreview.src = URL.createObjectURL(file);
-            console.log(uploadImagePreview.src);
         }
     });
 }
 // End Upload Image
+
+// Show detail
+const detailBtn = document.querySelectorAll("[detail]");
+if (detailBtn) {
+    detailBtn.forEach((btn) => {
+        btn.addEventListener("click", () => {
+            const productId = btn.closest("tr").getAttribute("product-id");
+            const detailAPI = `/admin/products/detail/${productId}`;
+            window.location.href = detailAPI;
+            return;
+        });
+    });
+}
+// End show detail

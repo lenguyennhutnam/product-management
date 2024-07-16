@@ -77,9 +77,6 @@ if (editBtn) {
             const editAPI = `/admin/products/edit/${productId}`;
             window.location.href = editAPI;
             return;
-            // fetch(editAPI, {
-            //     method: "GET",
-            // })
         });
     });
 }
