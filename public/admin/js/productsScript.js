@@ -51,6 +51,7 @@ actionBoxSubmit(fetchAction);
 // Send product to trashbin
 const trashBtn = document.querySelectorAll("[send-to-trash]");
 if (trashBtn) {
+    console.log(1255);
     trashBtn.forEach((btn) => {
         btn.addEventListener("click", (e) => {
             const productId = btn.closest("tr").getAttribute("product-id");
