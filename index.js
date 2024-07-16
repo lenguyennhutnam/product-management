@@ -27,9 +27,9 @@ app.use(session({ cookie: { maxAge: 2000 } }));
 app.use(flash());
 // End flash
 
-app.set("views", "./views");
+app.set("views", `${__dirname}/views`);
 app.set("view engine", "pug");
-app.use(express.static("public"));
+app.use(express.static(`${__dirname}/public`));
 
 // App locals variables
 app.locals.prefixAdmin = systemConfig.prefixAdmin;
