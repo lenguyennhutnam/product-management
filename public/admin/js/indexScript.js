@@ -1,5 +1,4 @@
 const url = new URL(window.location.href);
-console.log(456);
 // LOAD PAGE
 // add class active to filter btn
 const clickedBtn = document.querySelector(
