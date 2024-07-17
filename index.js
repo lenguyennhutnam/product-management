@@ -4,6 +4,7 @@ const flash = require("express-flash");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const methodOverride = require("method-override");
+const path = require('path');
 
 require("dotenv").config();
 const systemConfig = require("./config/system");
@@ -26,7 +27,7 @@ app.use(cookieParser("keyboard cat"));
 app.use(session({ cookie: { maxAge: 2000 } }));
 app.use(flash());
 // End flash
-
+app.use('/tinymce', express.static(path.join(__dirname, 'node_modules', 'tinymce')));
 app.set("views", `${__dirname}/views`);
 app.set("view engine", "pug");
 app.use(express.static(`${__dirname}/public`));

@@ -12,7 +12,8 @@ block main
         .col-4.mb-3
           .product-item
             .inner-image
-              img(src=product.thumbnail alt=product.name)
+              a(href=`/products/${product.slug}`)
+                img(src=product.thumbnail alt=product.name)
             .inner-content
               h3.inner-title 
                 a(href=`/products/${product.slug}`) #{product.title}

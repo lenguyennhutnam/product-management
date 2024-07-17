@@ -33,7 +33,7 @@ a:hover {
 }
 
 .body .sider {
-    width: 150px;
+    width: 200px;
     background: #323232;
     color: #fff;
     height: calc(100vh - 56px);
@@ -45,19 +45,13 @@ a:hover {
 .body .main {
     margin: 15px;
     position: relative;
-    left: 150px;
+    left: 200px;
     width: calc(100% - 180px);
 }
 
 /* End body */
 
 /* Sider  */
-
-.sider {
-    width: 150px;
-    height: 100vh;
-    background-color: #323232;
-}
 
 .sider .inner-menu ul {
     padding: 0;

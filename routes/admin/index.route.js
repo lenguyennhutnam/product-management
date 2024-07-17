@@ -1,6 +1,7 @@
 const dashboardRoute = require("./dashboard.route");
 const productsRoute = require("./products.route");
 const trashbinRoute = require("./trashbin.route");
+const productsCategoryRoute = require("./products-category.route");
 const systemConfig = require("../../config/system");
 
 module.exports.index = (app) => {
@@ -8,4 +9,5 @@ module.exports.index = (app) => {
     app.use(`/${path}/dashboard`, dashboardRoute);
     app.use(`/${path}/products`, productsRoute);
     app.use(`/${path}/trashbin`, trashbinRoute);
+    app.use(`/${path}/products-category`, productsCategoryRoute);
 };
