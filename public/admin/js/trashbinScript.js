@@ -22,13 +22,16 @@ recoveryBtn.forEach((btn) => {
 // recovery, delete multi product
 const fetchAction = (actionData) => {
     let actionAPI;
+    let methodAPI;
     if (actionData.action == "recovery") {
         actionAPI = "/admin/trashbin/recovery-many";
+        methodAPI = "PATCH";
     } else if (actionData.action == "delete") {
         actionAPI = "/admin/trashbin/delete-many";
+        methodAPI = "DELETE";
     }
     fetch(actionAPI, {
-        method: "PATCH",
+        method: methodAPI,
         headers: {
             "Content-Type": "application/json",
         },
