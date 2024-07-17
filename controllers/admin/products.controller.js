@@ -1,6 +1,5 @@
 const Product = require("../../models/product.model");
 const paginationHelper = require("../../helpers/pagination.helper.js");
-const convertDateTime = require("../../helpers/convertDateTime.helper.js");
 const systemConfig = require("../../config/system");
 // [GET] /admin/products
 module.exports.index = async (req, res) => {
@@ -113,11 +112,6 @@ module.exports.createPage = async (req, res) => {
 
 // [POST] /admin/products/create
 module.exports.create = async (req, res) => {
-    //upload file
-    if (req.file && req.file.filename) {
-        req.body.thumbnail = `/uploads/${req.file.filename}`;
-    }
-    //parse to db type
     req.body.price = parseInt(req.body.price) || 0;
     req.body.discountPercentage = parseInt(req.body.discountPercentage) || 0;
     req.body.stock = parseInt(req.body.stock) || 0;
@@ -156,19 +150,14 @@ module.exports.editPage = async (req, res) => {
 module.exports.edit = async (req, res) => {
     try {
         const id = req.params.id;
-        //upload file
-        if (req.file && req.file.filename) {
-            req.body.thumbnail = `/uploads/${req.file.filename}`;
-        }
         //parse to db type
         req.body.price = parseInt(req.body.price) || 0;
         req.body.discountPercentage =
-        parseInt(req.body.discountPercentage) || 0;
+            parseInt(req.body.discountPercentage) || 0;
         req.body.stock = parseInt(req.body.stock) || 0;
         const numberProduct = await Product.countDocuments({});
-        
+
         req.body.position = parseInt(req.body.position) || numberProduct + 1;
-        console.log(req.body);
         await Product.updateOne(
             {
                 _id: id,
@@ -176,7 +165,7 @@ module.exports.edit = async (req, res) => {
             },
             req.body
         );
-        
+
         req.flash("success", "Cập nhật sản phẩm thành công!");
     } catch (error) {
         req.flash("error", "Id sản phẩm không hợp lệ!");
