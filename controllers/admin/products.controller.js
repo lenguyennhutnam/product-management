@@ -23,13 +23,23 @@ module.exports.index = async (req, res) => {
         const regex = new RegExp(keyword, "i");
         find.title = regex;
     }
+
     // pagination
     const pagination = await paginationHelper.pagination(req, find);
+    // end pagination
+    // Sắp xếp
+    const sort = {};
 
+    if (req.query.sortKey && req.query.sortValue) {
+        sort[req.query.sortKey] = req.query.sortValue;
+    } else {
+        sort.position = "desc";
+    }
+    // Hết Sắp xếp
     const products = await Product.find(find)
         .limit(pagination.limit)
         .skip(pagination.skip)
-        .sort({ position: "desc" });
+        .sort(sort);
     res.render("admin/pages/products", {
         pageTitle: "Products",
         products: products,
@@ -170,7 +180,7 @@ module.exports.edit = async (req, res) => {
     } catch (error) {
         req.flash("error", "Id sản phẩm không hợp lệ!");
     }
-    res.redirect("back");
+    res.redirect(`/${systemConfig.prefixAdmin}/products`);
 };
 
 // [GET] /admin/products/detail/:id

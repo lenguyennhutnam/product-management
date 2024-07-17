@@ -20,6 +20,26 @@ block main
       {value: "inactive", title: "Ngưng hoạt động"},
       {value: "toTrash", title: "Xóa"}
     ])
+  +card-head("Sắp xếp")
+    .row
+      .col-5
+        div(sort)
+          select(
+            class="form-control"
+            name="sort"
+            sort-select
+          )
+            option(value="position-desc") Vị trí giảm dần
+            option(value="position-asc") Vị trí tăng dần
+            option(value="price-desc") Giá giảm dần
+            option(value="price-asc") Giá tăng dần
+            option(value="title-asc") Tiêu đề A - Z
+            option(value="title-desc") Tiêu đề Z - A
+
+          button(
+            class="btn btn-danger mt-2"
+            sort-clear
+          ) Clear
   +card-head("Danh sách")
     .text-right.mb-3
       a(
