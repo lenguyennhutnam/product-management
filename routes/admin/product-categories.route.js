@@ -16,7 +16,19 @@ router.post(
     validate.createPost,
     controller.createPost
 );
+router.get("/detail/:id", controller.detail);
+router.get("/edit/:id", controller.edit);
+router.patch(
+    "/edit/:id",
+    upload.single("thumbnail"),
+    uploadCloud.uploadSingle,
+    validate.createPost,
+    controller.editPatch
+);
 router.patch("/delete/:id", controller.delete);
 router.patch("/delete-multi", controller.deleteMulti);
+router.patch("/change-status/:id", controller.changeStatus);
+router.patch("/change-position", controller.changePosition);
+router.patch("/change-multi-status", controller.changeMultiStatus);
 
 module.exports = router;

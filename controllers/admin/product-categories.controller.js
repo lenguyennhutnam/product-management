@@ -71,6 +71,60 @@ module.exports.createPost = async (req, res) => {
     }
     res.redirect(`/${systemConfig.prefixAdmin}/product-categories`);
 };
+// [GET] /admin/product-categories/detail/:id
+module.exports.detail = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const productCategory = await ProductCategory.findOne({
+            _id: id,
+            deleted: false,
+        });
+        res.render("admin/pages/product-categories/detail", {
+            productCategory: productCategory,
+        });
+    } catch {
+        res.redirect("back");
+    }
+};
+// [GET] /admin/product-categories/edit/:id
+module.exports.edit = async (req, res) => {
+    const id = req.params.id;
+    const productCategory = await ProductCategory.findOne({
+        _id: id,
+        deleted: false,
+    });
+    try {
+        res.render("admin/pages/product-categories/edit", {
+            pageTitle: "Chỉnh sửa danh mục sản phẩm",
+            productCategory: productCategory,
+        });
+    } catch {
+        res.redirect("back");
+    }
+};
+// [PATCH] /admin/product-categories/edit/:id
+module.exports.editPatch = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const numberItem = await ProductCategory.countDocuments({});
+
+        req.body.position = parseInt(req.body.position) || numberItem + 1;
+        await ProductCategory.updateOne(
+            {
+                _id: id,
+                deleted: false,
+            },
+            req.body
+        );
+
+        req.flash("success", "Cập nhật sản phẩm thành công!");
+    } catch (error) {
+        console.log(error);
+        req.flash("error", "Id sản phẩm không hợp lệ!");
+    }
+    res.redirect(`/${systemConfig.prefixAdmin}/product-categories`);
+};
+
 // [PATCH] /admin/product-categories/delete/:id
 module.exports.delete = async (req, res) => {
     const itemId = req.params.id;
@@ -100,6 +154,50 @@ module.exports.deleteMulti = async (req, res) => {
         await ProductCategory.updateMany(
             { _id: productIds },
             { deleted: true, timeDelete: currdate }
+        );
+    }
+    res.json({ code: 200 });
+};
+// [PATCH] /admin/product-categories/change-status/:id
+module.exports.changeStatus = async (req, res) => {
+    try {
+        req.flash("success", "Cập nhật thành công");
+        const changeProduct = await ProductCategory.findOne({
+            _id: req.params.id,
+        });
+        const newStatus =
+            changeProduct.status == "active" ? "inactive" : "active";
+        await ProductCategory.updateOne(
+            { _id: req.params.id },
+            { status: newStatus }
+        );
+        res.json({
+            code: 200,
+        });
+    } catch (err) {
+        res.redirect("back");
+    }
+};
+// [PATCH] /admin/product-categories/change-multi-status
+module.exports.changeMultiStatus = async (req, res) => {
+    const { action, productIds } = req.body;
+    if (productIds.length > 0) {
+        await ProductCategory.updateMany(
+            { _id: productIds },
+            { status: action }
+        );
+        req.flash("success", "Cập nhật thành công");
+    }
+    res.json({ code: 200 });
+};
+
+// [PATCH] /admin/product-categories/change-position
+module.exports.changePosition = async (req, res) => {
+    const { productId, position } = req.body;
+    if (productId) {
+        await ProductCategory.updateOne(
+            { _id: productId },
+            { position: position }
         );
     }
     res.json({ code: 200 });

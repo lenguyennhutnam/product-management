@@ -3,6 +3,7 @@ import {
     detailAction,
     editAction,
     trashAction,
+    changeStatusAction,
 } from "./helper/action.helper.js";
 
 //Multi action
@@ -42,27 +43,7 @@ trashAction("products", "product-id");
 // End send to trash
 
 // Change status
-const changeStatusBtns = document.querySelectorAll("[change-status-btn]");
-if (changeStatusBtns) {
-    changeStatusBtns.forEach((btn) => {
-        btn.addEventListener("click", (e) => {
-            const productId = btn.closest("tr").getAttribute("product-id");
-            const API = `/admin/products/change-status/${productId}`;
-            fetch(API, {
-                method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            })
-                .then((res) => res.json())
-                .then((data) => {
-                    if (data.code == 200) {
-                        window.location.reload();
-                    }
-                });
-        });
-    });
-}
+changeStatusAction("products", "product-id");
 // End change status
 
 // Set position

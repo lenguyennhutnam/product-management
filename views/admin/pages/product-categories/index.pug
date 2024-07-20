@@ -52,6 +52,7 @@ block main
           th STT
           th Hình ảnh
           th Tiêu đề
+          th Danh mục cha
           th Vị trí
           th Trạng thái
           th Hành động
@@ -70,6 +71,7 @@ block main
                   height = "100px"
                 ) 
             td #{productCategory.title}
+            td #{productCategory.parent_id}
             td 
               input(
               type = "number"

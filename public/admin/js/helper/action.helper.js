@@ -23,7 +23,6 @@ _actionCheckBtns.forEach((btn) => {
         }
     });
 });
-
 // submit action box logic
 export function actionBoxSubmit(fetchAction, id) {
     const actionBox = document.querySelector(".action-box");
@@ -44,7 +43,6 @@ export function actionBoxSubmit(fetchAction, id) {
         fetchAction(updateStatusData);
     });
 }
-
 // Show detail
 export function detailAction(item, idAtt) {
     const detailBtn = document.querySelectorAll("[detail]");
@@ -60,7 +58,31 @@ export function detailAction(item, idAtt) {
     }
 }
 // End show detail
-
+// Change status
+export function changeStatusAction(item, idAtt) {
+    const changeStatusBtns = document.querySelectorAll("[change-status-btn]");
+    if (changeStatusBtns) {
+        changeStatusBtns.forEach((btn) => {
+            btn.addEventListener("click", (e) => {
+                const itemId = btn.closest("tr").getAttribute(`${idAtt}`);
+                const API = `/admin/${item}/change-status/${itemId}`;
+                fetch(API, {
+                    method: "PATCH",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                })
+                    .then((res) => res.json())
+                    .then((data) => {
+                        if (data.code == 200) {
+                            window.location.reload();
+                        }
+                    });
+            });
+        });
+    }
+}
+// End change status
 // Edit action
 export function editAction(item, idAtt) {
     const editBtn = document.querySelectorAll("[edit]");
