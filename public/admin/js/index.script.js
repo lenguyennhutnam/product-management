@@ -79,20 +79,6 @@ if (uploadImage) {
 }
 // End Upload Image
 
-// Show detail
-const detailBtn = document.querySelectorAll("[detail]");
-if (detailBtn) {
-    detailBtn.forEach((btn) => {
-        btn.addEventListener("click", () => {
-            const productId = btn.closest("tr").getAttribute("product-id");
-            const detailAPI = `/admin/products/detail/${productId}`;
-            window.location.href = detailAPI;
-            return;
-        });
-    });
-}
-// End show detail
-
 // Sort
 const sort = document.querySelector("[sort]");
 if (sort) {
@@ -119,7 +105,6 @@ if (sort) {
             `option[value="${defaultSortKey}-${defaultSortValue}"]`
         );
         optionSelected.selected = true;
-        // optionSelected.setAttribute("selected", true);
     }
 
     // Tính năng clear

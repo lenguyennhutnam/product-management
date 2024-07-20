@@ -7,7 +7,7 @@ include ../../mixins/action-box.pug
 include ../../mixins/alert.pug
 
 block main 
-  h1(class="mb-4") Quản lý sản phẩm
+  h1(class="mb-4") Danh mục sản phẩm
   +card-head("Bộ lọc và tìm kiếm")
     .row
       .col-6
@@ -31,8 +31,6 @@ block main
           )
             option(value="position-desc") Vị trí giảm dần
             option(value="position-asc") Vị trí tăng dần
-            option(value="price-desc") Giá giảm dần
-            option(value="price-asc") Giá tăng dần
             option(value="title-asc") Tiêu đề A - Z
             option(value="title-desc") Tiêu đề Z - A
 
@@ -43,7 +41,7 @@ block main
   +card-head("Danh sách")
     .text-right.mb-3
       a(
-        href=`/${prefixAdmin}/products/create`
+        href=`/${prefixAdmin}/product-categories/create`
         class="btn btn-outline-success"
       ) + Thêm mới
     table.table.table-hover.table-sm
@@ -54,13 +52,12 @@ block main
           th STT
           th Hình ảnh
           th Tiêu đề
-          th Giá
+          th Vị trí
           th Trạng thái
           th Hành động
-          th Vị trí
       tbody 
-        each product, index in products 
-          tr(product-id=product.id) 
+        each productCategory, index in productCategories 
+          tr(productCategory-id=productCategory.id) 
             td 
               input(type="checkbox" name="actionChecked")
             td #{index + 1}
@@ -68,21 +65,20 @@ block main
               .img-box(style="width: 60px; height: 60px;")
                 img(
                   class="img-thumbnail"
-                  src = product.thumbnail
+                  src = productCategory.thumbnail
                   width = "auto"
                   height = "100px"
                 ) 
-            td #{product.title}
-            td #{product.price}
+            td #{productCategory.title}
             td 
               input(
               type = "number"
               name = "position"
-              value = product.position 
+              value = productCategory.position 
               style="width:60px" 
               min="0")
             td
-              if product.status == 'active' 
+              if productCategory.status == 'active' 
                 button(
                 class="badge btn btn-success"
                 change-status-btn
@@ -97,4 +93,4 @@ block main
               button(class="btn btn-warning btn-sm" edit) Sửa
               button(class="btn btn-danger btn-sm" send-to-trash) Xóa
     +pagination(pagination)
-  script(type="module" src="/admin/js/productsScript.js")
+  script(type="module" src="/admin/js/product-categories.script.js")

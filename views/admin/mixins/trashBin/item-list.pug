@@ -1,0 +1,65 @@
+mixin product-list()
+  table.table.table-hover.table-sm
+    thead 
+      tr 
+        th 
+          input(type="checkbox" name="actionCheckAll")
+        th STT
+        th Hình ảnh
+        th Tiêu đề
+        th Giá
+        th Thời gian xóa
+        th Hành động
+    if items.length > 0
+      tbody 
+        each item, index in items 
+          tr(product-id=item.id) 
+            td 
+              input(type="checkbox" name="actionChecked")
+            td #{index + 1}
+            td
+              .img-box(style="width: 60px; height: 60px;")
+                img(
+                  class="img-thumbnail"
+                  src = item.thumbnail
+                  width = "auto"
+                  height = "100px"
+                ) 
+            td #{item.title}
+            td #{item.price}
+            td #{item.timeDelete.time} #{item.timeDelete.date}
+            td
+              button(class="btn btn-success btn-sm" recovery) Khôi phục
+              button(class="btn btn-danger btn-sm" permanent-delete) Xóa vĩnh viễn
+
+mixin product-categories-list()             
+  table.table.table-hover.table-sm
+    thead 
+      tr 
+        th 
+          input(type="checkbox" name="actionCheckAll")
+        th STT
+        th Hình ảnh
+        th Tiêu đề
+        th Thời gian xóa
+        th Hành động
+    if items.length > 0
+      tbody 
+        each item, index in items 
+          tr(productCategory-id=item.id) 
+            td 
+              input(type="checkbox" name="actionChecked")
+            td #{index + 1}
+            td
+              .img-box(style="width: 60px; height: 60px;")
+                img(
+                  class="img-thumbnail"
+                  src = item.thumbnail
+                  width = "auto"
+                  height = "100px"
+                ) 
+            td #{item.title}
+            td #{item.timeDelete.time} #{item.timeDelete.date}
+            td
+              button(class="btn btn-success btn-sm" recovery) Khôi phục
+              button(class="btn btn-danger btn-sm" permanent-delete) Xóa vĩnh viễn

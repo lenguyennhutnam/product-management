@@ -25,7 +25,10 @@ module.exports.index = async (req, res) => {
     }
 
     // pagination
-    const pagination = await paginationHelper.pagination(req, find);
+    const pagination = await paginationHelper.pagination(
+        req,
+        await Product.countDocuments(find)
+    );
     // end pagination
     // Sắp xếp
     const sort = {};
@@ -41,7 +44,7 @@ module.exports.index = async (req, res) => {
         .skip(pagination.skip)
         .sort(sort);
     res.render("admin/pages/products", {
-        pageTitle: "Products",
+        pageTitle: "Sản phẩm",
         products: products,
         keyword: keyword,
         filterStatus: filterStatus,
