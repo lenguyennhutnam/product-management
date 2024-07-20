@@ -40,6 +40,7 @@ module.exports.index = async (req, res) => {
     }
     // Hết Sắp xếp
     const products = await Product.find(find)
+        .lean()
         .limit(pagination.limit)
         .skip(pagination.skip)
         .sort(sort);

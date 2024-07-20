@@ -19,7 +19,10 @@ block main
         span(class="badge badge-danger") Dừng hoạt động
 
   if (productCategory.position)
-    div(class="mb-4") <b>Vị trí:</b> <b>#{productCategory.position}</b>
+    div(class="mb-4") <b>Vị trí:</b> #{productCategory.position}
+
+  if (productCategory.parentItem)
+    div(class="mb-4") <b>Danh mục cha:</b> #{productCategory.parentItem.title}
 
   if (productCategory.description)
     div <b>Mô tả sản phẩm</b>

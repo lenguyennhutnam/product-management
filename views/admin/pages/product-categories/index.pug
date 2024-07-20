@@ -58,7 +58,7 @@ block main
           th Hành động
       tbody 
         each productCategory, index in productCategories 
-          tr(productCategory-id=productCategory.id) 
+          tr(productCategory-id=productCategory._id) 
             td 
               input(type="checkbox" name="actionChecked")
             td #{index + 1}
@@ -71,7 +71,7 @@ block main
                   height = "100px"
                 ) 
             td #{productCategory.title}
-            td #{productCategory.parent_id}
+            td #{productCategory.parentName}
             td 
               input(
               type = "number"

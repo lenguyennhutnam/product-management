@@ -1,0 +1,15 @@
+mixin multiMenu(items, selected, level="--")
+  each item in items
+    if selected == item._id
+      option(value=item._id selected=true) #{level} #{item.title} 
+    else
+      option(value=item._id) #{level} #{item.title}
+    if (item.children)
+      +multiMenu(item.children, selected, level+"--")
+
+//- mixin multiMenu(items, level = 1)
+//-   each item in items
+//-     - const prefix = Array(level+1).join("--");
+//-     option(value=item.id) #{prefix} #{item.title}
+//-     if(item.children)
+//-       +multiMenu(item.children, level + 1)     

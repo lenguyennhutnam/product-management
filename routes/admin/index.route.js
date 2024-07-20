@@ -6,6 +6,7 @@ const systemConfig = require("../../config/system");
 
 module.exports.index = (app) => {
     const path = systemConfig.prefixAdmin;
+    app.use(`/admin`, productsRoute);
     app.use(`/${path}/dashboard`, dashboardRoute);
     app.use(`/${path}/products`, productsRoute);
     app.use(`/${path}/trashbin`, trashbinRoute);

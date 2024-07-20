@@ -26,9 +26,9 @@ module.exports.index = async (req, res) => {
 
     const item = await model[category]
         .find(find)
+        .lean()
         .limit(pagination.limit)
         .skip(pagination.skip)
-        .lean()
         .sort({
             timeDelete: "desc",
         });
@@ -36,6 +36,7 @@ module.exports.index = async (req, res) => {
         item.timeDelete = convertDateTime(item.timeDelete);
         item.id = item._id;
     });
+    console.log(item);
     res.render("admin/pages/trashbin", {
         pageTitle: "Trash bin",
         category: category,

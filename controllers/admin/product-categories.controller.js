@@ -1,5 +1,6 @@
 const ProductCategory = require("../../models/product-category.model.js");
 const paginationHelper = require("../../helpers/pagination.helper.js");
+const multiMenu = require("../../helpers/multiMenu.helper.js");
 const systemConfig = require("../../config/system.js");
 
 // [GET] /admin/product-categories
@@ -39,9 +40,20 @@ module.exports.index = async (req, res) => {
     }
     // Hết Sắp xếp
     const productCategories = await ProductCategory.find(find)
+        .lean()
         .limit(pagination.limit)
         .skip(pagination.skip)
         .sort(sort);
+    for (item of productCategories) {
+        if (item.parent_id) {
+            const parentItem = await ProductCategory.findOne({
+                _id: item.parent_id,
+            }).exec();
+            item.parentName = parentItem.title;
+        } else {
+            item.parentName = "_";
+        }
+    }
     res.render("admin/pages/product-categories", {
         pageTitle: "Danh mục sản phẩm",
         productCategories: productCategories,
@@ -52,8 +64,10 @@ module.exports.index = async (req, res) => {
 };
 // [GET] /admin/product-categories/create
 module.exports.create = async (req, res) => {
+    const productCategories = await ProductCategory.find({});
     res.render("admin/pages/product-categories/create", {
         pageTitle: "Danh mục sản phẩm",
+        productCategories: multiMenu.createMultiMenu(productCategories),
     });
 };
 // [POST] /admin/product-categories/create
@@ -69,7 +83,7 @@ module.exports.createPost = async (req, res) => {
     } finally {
         req.flash("success", "Tạo mới thành công");
     }
-    res.redirect(`/${systemConfig.prefixAdmin}/product-categories`);
+    res.redirect(`/${systemConfig.prefixAdmin}/product-categories/create`);
 };
 // [GET] /admin/product-categories/detail/:id
 module.exports.detail = async (req, res) => {
@@ -79,9 +93,19 @@ module.exports.detail = async (req, res) => {
             _id: id,
             deleted: false,
         });
-        res.render("admin/pages/product-categories/detail", {
-            productCategory: productCategory,
-        });
+        if (productCategory.parent_id) {
+            const parentItem = await ProductCategory.findOne({
+                _id: productCategory.parent_id,
+                deleted: false,
+            });
+            productCategory.parentItem = parentItem;
+        }
+        productCategory.parentItem = res.render(
+            "admin/pages/product-categories/detail",
+            {
+                productCategory: productCategory,
+            }
+        );
     } catch {
         res.redirect("back");
     }
@@ -93,14 +117,12 @@ module.exports.edit = async (req, res) => {
         _id: id,
         deleted: false,
     });
-    try {
-        res.render("admin/pages/product-categories/edit", {
-            pageTitle: "Chỉnh sửa danh mục sản phẩm",
-            productCategory: productCategory,
-        });
-    } catch {
-        res.redirect("back");
-    }
+    const productCategories = await ProductCategory.find({});
+    res.render("admin/pages/product-categories/edit", {
+        pageTitle: "Chỉnh sửa danh mục sản phẩm",
+        productCategory: productCategory,
+        productCategories: multiMenu.createMultiMenu(productCategories),
+    });
 };
 // [PATCH] /admin/product-categories/edit/:id
 module.exports.editPatch = async (req, res) => {
