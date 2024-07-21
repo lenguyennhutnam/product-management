@@ -1,6 +1,9 @@
 extends ../../layouts/default.pug
+include ../../mixins/multiMenu.pug
+include ../../mixins/back-btn.pug
 
 block main
+  +backBtn("/admin/products")
   h1(class="mb-4") #{pageTitle}
 
   form(
@@ -18,6 +21,11 @@ block main
         required
         value=product.title
       )
+    div(class="form-group")
+      label(for="category_id") Danh mục
+      select(class="form-control" name="category_id")
+        option(value="") --
+        +multiMenu(productCategories, product.category_id)
     div(class="form-group")
       label(for="desc") Mô tả
       textarea(

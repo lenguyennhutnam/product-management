@@ -60,7 +60,7 @@ block main
           th Vị trí
       tbody 
         each product, index in products 
-          tr(product-id=product.id) 
+          tr(product-id=product._id) 
             td 
               input(type="checkbox" name="actionChecked")
             td #{index + 1}

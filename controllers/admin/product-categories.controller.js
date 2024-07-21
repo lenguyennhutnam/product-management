@@ -1,6 +1,7 @@
 const ProductCategory = require("../../models/product-category.model.js");
 const paginationHelper = require("../../helpers/pagination.helper.js");
 const multiMenu = require("../../helpers/multiMenu.helper.js");
+const productCategoryMenu = require("../../helpers/product-category.helper.js");
 const systemConfig = require("../../config/system.js");
 
 // [GET] /admin/product-categories
@@ -64,10 +65,10 @@ module.exports.index = async (req, res) => {
 };
 // [GET] /admin/product-categories/create
 module.exports.create = async (req, res) => {
-    const productCategories = await ProductCategory.find({});
     res.render("admin/pages/product-categories/create", {
         pageTitle: "Danh mục sản phẩm",
-        productCategories: multiMenu.createMultiMenu(productCategories),
+        // productCategories: multiMenu.createMultiMenu(productCategories),
+        productCategories: await productCategoryMenu(),
     });
 };
 // [POST] /admin/product-categories/create
@@ -117,11 +118,10 @@ module.exports.edit = async (req, res) => {
         _id: id,
         deleted: false,
     });
-    const productCategories = await ProductCategory.find({});
     res.render("admin/pages/product-categories/edit", {
         pageTitle: "Chỉnh sửa danh mục sản phẩm",
         productCategory: productCategory,
-        productCategories: multiMenu.createMultiMenu(productCategories),
+        productCategories: await productCategoryMenu(),
     });
 };
 // [PATCH] /admin/product-categories/edit/:id
@@ -141,7 +141,6 @@ module.exports.editPatch = async (req, res) => {
 
         req.flash("success", "Cập nhật sản phẩm thành công!");
     } catch (error) {
-        console.log(error);
         req.flash("error", "Id sản phẩm không hợp lệ!");
     }
     res.redirect(`/${systemConfig.prefixAdmin}/product-categories`);

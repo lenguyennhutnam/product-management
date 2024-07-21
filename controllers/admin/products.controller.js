@@ -1,6 +1,8 @@
 const Product = require("../../models/product.model");
+const ProductCategory = require("../../models/product-category.model");
 const paginationHelper = require("../../helpers/pagination.helper.js");
 const systemConfig = require("../../config/system");
+const productCategoryMenu = require("../../helpers/product-category.helper.js");
 // [GET] /admin/products
 module.exports.index = async (req, res) => {
     const find = {
@@ -121,9 +123,9 @@ module.exports.changePosition = async (req, res) => {
 module.exports.createPage = async (req, res) => {
     res.render("admin/pages/products/create.pug", {
         pageTitle: "Thêm mới sản phẩm",
+        productCategories: await productCategoryMenu(),
     });
 };
-
 // [POST] /admin/products/create
 module.exports.create = async (req, res) => {
     req.body.price = parseInt(req.body.price) || 0;
@@ -136,7 +138,6 @@ module.exports.create = async (req, res) => {
     await newProduct.save();
     res.redirect(`/${systemConfig.prefixAdmin}/products`);
 };
-
 // [GET] /admin/products/edit/:id
 module.exports.editPage = async (req, res) => {
     try {
@@ -151,6 +152,7 @@ module.exports.editPage = async (req, res) => {
             res.render("admin/pages/products/edit", {
                 pageTitle: "Chỉnh sửa sản phẩm",
                 product: product,
+                productCategories: await productCategoryMenu(),
             });
         } else {
             res.redirect(`/${systemConfig.prefixAdmin}/products`);
@@ -159,7 +161,6 @@ module.exports.editPage = async (req, res) => {
         res.redirect(`/${systemConfig.prefixAdmin}/products`);
     }
 };
-
 // [PATCH] /admin/products/edit/:id
 module.exports.edit = async (req, res) => {
     try {
@@ -186,7 +187,6 @@ module.exports.edit = async (req, res) => {
     }
     res.redirect(`/${systemConfig.prefixAdmin}/products`);
 };
-
 // [GET] /admin/products/detail/:id
 module.exports.detail = async (req, res) => {
     try {
@@ -195,7 +195,12 @@ module.exports.detail = async (req, res) => {
         const product = await Product.findOne({
             _id: id,
             deleted: false,
-        });
+        }).lean();
+        if (product.category_id) {
+            product.category = await ProductCategory.findOne({
+                _id: product.category_id,
+            }).lean();
+        }
 
         if (product) {
             res.render("admin/pages/products/detail", {
@@ -206,6 +211,7 @@ module.exports.detail = async (req, res) => {
             res.redirect(`/${systemConfig.prefixAdmin}/products`);
         }
     } catch (error) {
+        console.log(error);
         res.redirect(`/${systemConfig.prefixAdmin}/products`);
     }
 };

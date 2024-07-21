@@ -1,9 +1,10 @@
 extends ../../layouts/default.pug
 include ../../mixins/multiMenu.pug
+include ../../mixins/back-btn.pug
 
 block main
+  +backBtn("/admin/product-categories")
   h1(class="mb-4") #{pageTitle}
-
   form(
     action=`/${prefixAdmin}/product-categories/edit/${productCategory._id}?_method=PATCH`
     method="POST"

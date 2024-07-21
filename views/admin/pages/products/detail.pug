@@ -1,8 +1,13 @@
 extends ../../layouts/default.pug
+include ../../mixins/back-btn.pug
 
 block main
+  +backBtn("/admin/products")
   if (product.title)
     h1(class="mb-4") #{product.title}
+
+  if (product.category)
+    div(class="mb-4") <b>Danh mục:</b> #{product.category.title}
 
   if (product.price)
     div(class="mb-4") <b>Giá:</b> #{product.price}$

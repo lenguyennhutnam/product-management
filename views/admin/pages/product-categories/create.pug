@@ -1,7 +1,9 @@
 extends ../../layouts/default.pug
 include ../../mixins/multiMenu.pug
+include ../../mixins/back-btn.pug
 
 block main
+  +backBtn("/admin/product-categories")
   h1(class="mb-4") Thêm mới danh mục sản phẩm
 
   form(
@@ -23,6 +25,7 @@ block main
       select(class="form-control" name="parent_id")
         option(value="") --
         +multiMenu(productCategories, "")
+    div(class="form-group")
       label(for="desc") Mô tả
       textarea(
         type="text"
@@ -32,10 +35,7 @@ block main
         rows="5"
         textarea-mce
       )
-    div(
-      class="form-group"
-      upload-image
-    )
+    div(class="form-group" upload-image)
       label(for="thumbnail") Ảnh
       input(
         type="file"
