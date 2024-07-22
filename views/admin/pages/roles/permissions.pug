@@ -1,0 +1,53 @@
+extends ../../layouts/default.pug
+include ../../mixins/checkbox-list.pug
+
+block main
+  h1(class="mb-4") Phân quyền
+
+  if(roles)
+    div(class="text-right")
+      button(
+        type="submit"
+        class="btn btn-primary mb-3"
+        button-submit=`/${prefixAdmin}/roles/permissions`
+      ) Cập nhật
+
+    table(
+      class="table table-hover table-sm"
+      table-permissions
+    )
+      thead
+        tr
+          th Tính năng
+          each item in roles
+            th(
+              class="text-center"
+              role-id=item.id
+            ) #{item.title}
+      tbody
+        +checkboxList("<b> Tất cả quyền<b/>", roles, "permissionsAll")    
+        tr
+          td(colspan="100")
+            b Sản phẩm
+        +checkboxList("Chọn tất cả", roles, "productsAll")    
+        +checkboxList("Xem", roles, "products_view")
+        +checkboxList("Thêm mới", roles, "products_create")
+        +checkboxList("Chỉnh sửa", roles, "products_edit")
+        +checkboxList("Xóa", roles, "products_delete")
+        tr
+          td(colspan="100")
+            b Danh mục sản phẩm
+        +checkboxList("Chọn tất cả", roles, "product-categoriesAll")    
+        +checkboxList("Xem", roles, "product-categories_view")
+        +checkboxList("Thêm mới", roles, "product-categories_create")
+        +checkboxList("Chỉnh sửa", roles, "product-categories_edit")
+        +checkboxList("Xóa", roles, "product-categories_delete")
+        tr
+          td(colspan="100")
+            b Tài khoản
+        +checkboxList("Chọn tất cả", roles, "accountsAll")
+        +checkboxList("Xem", roles, "accounts_view")
+        +checkboxList("Thêm mới", roles, "accounts_create")
+        +checkboxList("Chỉnh sửa", roles, "accounts_edit")
+        +checkboxList("Xóa", roles, "accounts_delete")
+  script(type="module" src="/admin/js/permissions.script.js")

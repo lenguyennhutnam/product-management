@@ -1,0 +1,11 @@
+mixin checkboxList(title, itemList, dataName)
+  tr
+    td !{title}
+    each item in itemList
+      td(class="text-center")
+        input(
+          type="checkbox" 
+          data-id=item.id
+          data-name=dataName
+          checked=(item.permissions.includes(dataName) ? true : false)
+        )
