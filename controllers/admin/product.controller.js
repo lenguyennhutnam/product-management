@@ -1,7 +1,7 @@
-const Product = require("../../models/product.model");
-const ProductCategory = require("../../models/product-category.model");
+const Product = require("../../models/product.model.js");
+const ProductCategory = require("../../models/product-category.model.js");
 const paginationHelper = require("../../helpers/pagination.helper.js");
-const systemConfig = require("../../config/system");
+const systemConfig = require("../../config/system.js");
 const productCategoryMenu = require("../../helpers/product-category.helper.js");
 // [GET] /admin/products
 module.exports.index = async (req, res) => {

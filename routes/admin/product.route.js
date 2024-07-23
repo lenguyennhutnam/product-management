@@ -1,12 +1,12 @@
 const express = require("express");
 const multer = require("multer");
 const validate = require("../../validates/admin/product.validate.js");
-const uploadCloud = require("../../middlewares/admin/uploadCloud.middleware");
+const uploadCloud = require("../../middlewares/admin/uploadCloud.middleware.js");
 
 const upload = multer();
 
 const router = express.Router();
-const controller = require("../../controllers/admin/products.controller.js");
+const controller = require("../../controllers/admin/product.controller.js");
 
 router.get("/", controller.index);
 router.patch("/change-status/:id", controller.changeStatus);

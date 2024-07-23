@@ -24,7 +24,7 @@ module.exports.index = async (req, res) => {
         await model[category].countDocuments(find)
     );
 
-    const item = await model[category]
+    const items = await model[category]
         .find(find)
         .lean()
         .limit(pagination.limit)
@@ -32,15 +32,14 @@ module.exports.index = async (req, res) => {
         .sort({
             timeDelete: "desc",
         });
-    item.forEach((item) => {
-        item.timeDelete = convertDateTime(item.timeDelete);
-        item.id = item._id;
-    });
-    console.log(item);
+    for (item of items) {
+        item.timeDelete = convertDateTime(items.timeDelete);
+        item.id = items._id;
+    }
     res.render("admin/pages/trashbin", {
         pageTitle: "Trash bin",
         category: category,
-        items: item,
+        items: items,
         keyword: keyword,
         pagination: pagination,
     });

@@ -25,11 +25,11 @@ block main
               role-id=item.id
             ) #{item.title}
       tbody
-        +checkboxList("<b> Tất cả quyền<b/>", roles, "permissionsAll")    
+        +checkboxList("<b> Tất cả quyền<b/>", roles, "permissionsAll", "all-permission")    
         tr
           td(colspan="100")
             b Sản phẩm
-        +checkboxList("Chọn tất cả", roles, "productsAll")    
+        +checkboxList("Chọn tất cả", roles, "productsAll", "select-all-category")    
         +checkboxList("Xem", roles, "products_view")
         +checkboxList("Thêm mới", roles, "products_create")
         +checkboxList("Chỉnh sửa", roles, "products_edit")
@@ -37,7 +37,7 @@ block main
         tr
           td(colspan="100")
             b Danh mục sản phẩm
-        +checkboxList("Chọn tất cả", roles, "product-categoriesAll")    
+        +checkboxList("Chọn tất cả", roles, "product-categoriesAll", "select-all-category")    
         +checkboxList("Xem", roles, "product-categories_view")
         +checkboxList("Thêm mới", roles, "product-categories_create")
         +checkboxList("Chỉnh sửa", roles, "product-categories_edit")
@@ -45,7 +45,7 @@ block main
         tr
           td(colspan="100")
             b Tài khoản
-        +checkboxList("Chọn tất cả", roles, "accountsAll")
+        +checkboxList("Chọn tất cả", roles, "accountsAll", "select-all-category")
         +checkboxList("Xem", roles, "accounts_view")
         +checkboxList("Thêm mới", roles, "accounts_create")
         +checkboxList("Chỉnh sửa", roles, "accounts_edit")

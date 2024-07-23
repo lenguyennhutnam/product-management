@@ -58,6 +58,17 @@ module.exports.editPatch = async (req, res) => {
         req.flash("error", "Id không tồn tại");
     }
 };
+// [DELETE] /admin/roles/delete/:id
+module.exports.delete = async (req, res) => {
+    const id = req.params.id;
+    try {
+        await Role.deleteOne({ _id: id });
+        req.flash("success", "Xóa thành công");
+        res.json({ code: 200 });
+    } catch {
+        req.flash("error", "Id không tồn tại");
+    }
+};
 
 // ====================PERMISSION============================
 // [GET] /admin/roles/permissions
@@ -67,4 +78,20 @@ module.exports.permissions = async (req, res) => {
         pageTitle: "Phân quyền",
         roles: roles,
     });
+};
+// [PATCH] /admin/roles/permissions
+module.exports.permissionPatch = async (req, res) => {
+    const dataList = req.body.dataList;
+    const bulkUpdate = dataList.map((data) => ({
+        updateOne: {
+            filter: { _id: data.id },
+            update: { permissions: data.permissions },
+        },
+    }));
+    try {
+        await Role.bulkWrite(bulkUpdate);
+        res.json({ code: 200, message: "Cập nhật thành công!" });
+    } catch {
+        res.json({ code: 500, message: "Đã xảy ra lỗi!" });
+    }
 };

@@ -2,8 +2,8 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const validate = require("../../validates/admin/product-category.validate.js");
-const uploadCloud = require("../../middlewares/admin/uploadCloud.middleware");
-const controller = require("../../controllers/admin/product-categories.controller.js");
+const uploadCloud = require("../../middlewares/admin/uploadCloud.middleware.js");
+const controller = require("../../controllers/admin/product-category.controller.js");
 
 const upload = multer();
 
