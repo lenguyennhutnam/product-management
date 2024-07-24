@@ -145,7 +145,6 @@ module.exports.editPatch = async (req, res) => {
     }
     res.redirect(`/${systemConfig.prefixAdmin}/product-categories`);
 };
-
 // [PATCH] /admin/product-categories/delete/:id
 module.exports.delete = async (req, res) => {
     const itemId = req.params.id;
@@ -194,6 +193,12 @@ module.exports.changeStatus = async (req, res) => {
         );
         res.json({
             code: 200,
+            oldStatus:
+                changeProduct.status == "inactive"
+                    ? "btn-danger"
+                    : "btn-success",
+            newStatus: newStatus == "inactive" ? "btn-danger" : "btn-success",
+            text: newStatus == "active" ? "Hoạt động" : "Ngừng hoạt động",
         });
     } catch (err) {
         res.redirect("back");

@@ -5,43 +5,47 @@ const _actionCheckBtns = document.querySelectorAll(
     "input[name='actionChecked']"
 );
 // active all event
-_actionCheckAllBtn.addEventListener("change", (e) => {
+if (_actionCheckAllBtn && _actionCheckBtns) {
+    _actionCheckAllBtn.addEventListener("change", (e) => {
+        _actionCheckBtns.forEach((btn) => {
+            btn.checked = e.target.checked;
+        });
+    });
+    // check action event
     _actionCheckBtns.forEach((btn) => {
-        btn.checked = e.target.checked;
+        btn.addEventListener("change", (e) => {
+            const _actionCheckedList = document.querySelectorAll(
+                "input[name='actionChecked']:checked"
+            );
+            if (_actionCheckedList.length == _actionCheckBtns.length) {
+                _actionCheckAllBtn.checked = true;
+            } else {
+                _actionCheckAllBtn.checked = false;
+            }
+        });
     });
-});
-// check action event
-_actionCheckBtns.forEach((btn) => {
-    btn.addEventListener("change", (e) => {
-        const _actionCheckedList = document.querySelectorAll(
-            "input[name='actionChecked']:checked"
-        );
-        if (_actionCheckedList.length == _actionCheckBtns.length) {
-            _actionCheckAllBtn.checked = true;
-        } else {
-            _actionCheckAllBtn.checked = false;
-        }
-    });
-});
+}
 // submit action box logic
 export function actionBoxSubmit(fetchAction, id) {
     const actionBox = document.querySelector(".action-box");
-    const actionBtn = actionBox.querySelector("button");
-    const actionSelect = actionBox.querySelector("select");
-    actionBtn.addEventListener("click", (e) => {
-        const actionCheckedList = document.querySelectorAll(
-            "input[name='actionChecked']:checked"
-        );
-        const itemIds = Array.from(actionCheckedList).map((btn) => {
-            return btn.closest("tr").getAttribute(id);
+    if (actionBox) {
+        const actionBtn = actionBox.querySelector("button");
+        const actionSelect = actionBox.querySelector("select");
+        actionBtn.addEventListener("click", (e) => {
+            const actionCheckedList = document.querySelectorAll(
+                "input[name='actionChecked']:checked"
+            );
+            const itemIds = Array.from(actionCheckedList).map((btn) => {
+                return btn.closest("tr").getAttribute(id);
+            });
+            const action = actionSelect.value;
+            const updateStatusData = {
+                itemIds: itemIds,
+                action: action,
+            };
+            fetchAction(updateStatusData);
         });
-        const action = actionSelect.value;
-        const updateStatusData = {
-            itemIds: itemIds,
-            action: action,
-        };
-        fetchAction(updateStatusData);
-    });
+    }
 }
 // Show detail
 export function detailAction(item, idAtt) {
@@ -75,7 +79,9 @@ export function changeStatusAction(item, idAtt) {
                     .then((res) => res.json())
                     .then((data) => {
                         if (data.code == 200) {
-                            window.location.reload();
+                            btn.classList.remove(data.oldStatus);
+                            btn.classList.add(data.newStatus);
+                            btn.innerText = data.text;
                         }
                     });
             });
@@ -107,6 +113,7 @@ export function trashAction(item, idAtt) {
             btn.addEventListener("click", (e) => {
                 const itemId = btn.closest("tr").getAttribute(`${idAtt}`);
                 const deleteAPI = `/admin/${item}/delete/${itemId}`;
+                console.log(deleteAPI);
                 fetch(deleteAPI, {
                     method: "PATCH",
                 })

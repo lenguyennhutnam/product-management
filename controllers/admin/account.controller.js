@@ -8,7 +8,7 @@ const systemConfig = require("../../config/system");
 module.exports.index = async (req, res) => {
     const records = await Account.find({
         deleted: false,
-    });
+    }).lean();
 
     for (const record of records) {
         const role = await Role.findOne({
@@ -35,7 +35,6 @@ module.exports.create = async (req, res) => {
         roles: roles,
     });
 };
-
 // [POST] /admin/accounts/create
 module.exports.createPost = async (req, res) => {
     req.body.password = md5(req.body.password);
@@ -47,7 +46,24 @@ module.exports.createPost = async (req, res) => {
 
     res.redirect(`/${systemConfig.prefixAdmin}/accounts`);
 };
-
+// [PATCH] /admin/accounts/change-status/:id
+module.exports.changeStatus = async (req, res) => {
+    try {
+        const changeAccount = await Account.findOne({ _id: req.params.id });
+        const newStatus =
+            changeAccount.status == "active" ? "inactive" : "active";
+        await Account.updateOne({ _id: req.params.id }, { status: newStatus });
+        res.json({
+            code: 200,
+            oldStatus:
+                changeAccount.status == "active" ? "btn-success" : "btn-danger",
+            newStatus: newStatus == "active" ? "btn-success" : "btn-danger",
+            text: newStatus == "active" ? "Hoạt động" : "Ngừng hoạt động",
+        });
+    } catch (err) {
+        res.redirect("back");
+    }
+};
 // [GET] /admin/accounts/edit/:id
 module.exports.edit = async (req, res) => {
     const id = req.params.id;
@@ -67,7 +83,6 @@ module.exports.edit = async (req, res) => {
         account: account,
     });
 };
-
 // [PATCH] /admin/accounts/edit/:id
 module.exports.editPatch = async (req, res) => {
     const id = req.params.id;
@@ -89,4 +104,21 @@ module.exports.editPatch = async (req, res) => {
     req.flash("success", "Cập nhật thành công!");
 
     res.redirect("back");
+};
+// [PATCH] /admin/accounts/delete/:id
+module.exports.delete = async (req, res) => {
+    const accountId = req.params.id;
+    const currdate = new Date();
+    try {
+        if (accountId) {
+            req.flash("success", "Đã chuyển sản phẩm vào thùng rác");
+            await Account.updateOne(
+                { _id: accountId },
+                { deleted: true, timeDelete: currdate }
+            );
+        }
+        res.json({ code: 200 });
+    } catch (err) {
+        res.redirect("back");
+    }
 };

@@ -1,19 +1,24 @@
 const Product = require("../../models/product.model");
 const ProductCategory = require("../../models/product-category.model.js");
+const Account = require("../../models/account.model.js");
 const paginationHelper = require("../../helpers/pagination.helper.js");
 const convertDateTime = require("../../helpers/convertDateTime.helper.js");
 
 // [GET] /admin/trashbin
 module.exports.index = async (req, res) => {
     const category = req.query.category || "products";
-    const model = { products: Product, "product-categories": ProductCategory };
+    const model = {
+        products: Product,
+        "product-categories": ProductCategory,
+        accounts: Account,
+    };
     const find = {
         deleted: true,
     };
 
     // search products
     let keyword = "";
-    if (req.query.keyword) {
+    if (req.query.keyword && category != "accounts") {
         keyword = req.query.keyword;
         const regex = new RegExp(keyword, "i");
         find.title = regex;
@@ -32,9 +37,9 @@ module.exports.index = async (req, res) => {
         .sort({
             timeDelete: "desc",
         });
-    for (item of items) {
-        item.timeDelete = convertDateTime(items.timeDelete);
-        item.id = items._id;
+    for (const item of items) {
+        item.timeDelete = convertDateTime(item.timeDelete);
+        item.id = item._id;
     }
     res.render("admin/pages/trashbin", {
         pageTitle: "Trash bin",
@@ -48,14 +53,22 @@ module.exports.index = async (req, res) => {
 // [PATCH] /admin/trashbin/recovery/:id
 module.exports.recovery = async (req, res) => {
     const { category } = req.body;
-    const model = { products: Product, "product-categories": ProductCategory };
-    const item = req.params.id;
-    if (item) {
-        req.flash("success", "Khôi phục thành công");
-        await model[category].updateOne(
-            { _id: item },
-            { deleted: false, status: "inactive" }
-        );
+    const model = {
+        products: Product,
+        "product-categories": ProductCategory,
+        accounts: Account,
+    };
+    const id = req.params.id;
+    if (id) {
+        try {
+            req.flash("success", "Khôi phục thành công");
+            await model[category].updateOne(
+                { _id: id },
+                { deleted: false, status: "inactive" }
+            );
+        } catch {
+            res.send("error");
+        }
     }
     res.json({ code: 200 });
 };
@@ -63,7 +76,11 @@ module.exports.recovery = async (req, res) => {
 // [DELETE] /admin/trashbin/delete/:id
 module.exports.delete = async (req, res) => {
     const { category } = req.body;
-    const model = { products: Product, "product-categories": ProductCategory };
+    const model = {
+        products: Product,
+        "product-categories": ProductCategory,
+        accounts: Account,
+    };
     const productId = req.params.id;
     if (productId) {
         req.flash("error", "Sản phẩm đã được xóa vĩnh viễn");
@@ -75,7 +92,11 @@ module.exports.delete = async (req, res) => {
 // [PATCH] /admin/trashbin/recovery-many
 module.exports.recoveryMany = async (req, res) => {
     const { category } = req.body;
-    const model = { products: Product, "product-categories": ProductCategory };
+    const model = {
+        products: Product,
+        "product-categories": ProductCategory,
+        accounts: Account,
+    };
     const { itemIds } = req.body;
     req.flash("success", `Khôi phục thành công ${itemIds.length} sản phẩm`);
     await model[category].updateMany({ _id: itemIds }, { deleted: false });
@@ -84,7 +105,11 @@ module.exports.recoveryMany = async (req, res) => {
 // [DELETE] /admin/trashbin/delete-many
 module.exports.deleteMany = async (req, res) => {
     const { category } = req.body;
-    const model = { products: Product, "product-categories": ProductCategory };
+    const model = {
+        products: Product,
+        "product-categories": ProductCategory,
+        accounts: Account,
+    };
     const { itemIds } = req.body;
     req.flash("error", `${itemIds.length} sản phẩm đã được xóa vĩnh viễn`);
     await model[category].deleteMany({ _id: itemIds });

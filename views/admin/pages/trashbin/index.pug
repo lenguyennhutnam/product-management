@@ -15,6 +15,7 @@ block main
       select(class="custom-select" category)
         option(value="products") Sản phẩm
         option(value="product-categories") Danh mục sản phẩm
+        option(value="accounts") Tài khoản admin
   +card-head("Tìm kiếm")
     .row
       .col-6
@@ -30,6 +31,8 @@ block main
       +product-list()
     else if category == "product-categories"
       +product-categories-list()
+    else if category == "accounts"
+      +accounts-list()
     if items.length > 0
       +pagination(pagination)
     else 

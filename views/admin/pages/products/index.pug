@@ -60,7 +60,7 @@ block main
           th Vị trí
       tbody 
         each product, index in products 
-          tr(product-id=product._id) 
+          tr(product-id=product._id)
             td 
               input(type="checkbox" name="actionChecked")
             td #{index + 1}
@@ -97,4 +97,4 @@ block main
               button(class="btn btn-warning btn-sm" edit) Sửa
               button(class="btn btn-danger btn-sm" send-to-trash) Xóa
     +pagination(pagination)
-  script(type="module" src="/admin/js/products.script.js")
+  script(type="module" src="/admin/js/product.script.js")

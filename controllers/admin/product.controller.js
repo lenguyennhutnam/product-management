@@ -57,13 +57,18 @@ module.exports.index = async (req, res) => {
 // [PATCH] /admin/products/change-status/:id
 module.exports.changeStatus = async (req, res) => {
     try {
-        req.flash("success", "Cập nhật thành công");
         const changeProduct = await Product.findOne({ _id: req.params.id });
         const newStatus =
             changeProduct.status == "active" ? "inactive" : "active";
         await Product.updateOne({ _id: req.params.id }, { status: newStatus });
         res.json({
             code: 200,
+            oldStatus:
+                changeProduct.status == "inactive"
+                    ? "btn-danger"
+                    : "btn-success",
+            newStatus: newStatus == "inactive" ? "btn-danger" : "btn-success",
+            text: newStatus == "active" ? "Hoạt động" : "Ngừng hoạt động",
         });
     } catch (err) {
         res.redirect("back");

@@ -6,7 +6,7 @@ block main
   +backBtn("/admin/products")
   h1(class="mb-4") #{pageTitle}
 
-  form(
+  form( 
     action=`/${prefixAdmin}/products/edit/${product.id}?_method=PATCH`
     method="POST"
     enctype="multipart/form-data"

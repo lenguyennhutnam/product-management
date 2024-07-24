@@ -49,6 +49,8 @@ const fetchAction = (actionData) => {
 let idAtt = "product-id";
 if (defaultCategory == "product-categories") {
     idAtt = "productCategory-id";
+} else if (defaultCategory == "accounts") {
+    idAtt = "account-id";
 }
 actionBoxSubmit(fetchAction, idAtt);
 // End recovery, delete multi product
