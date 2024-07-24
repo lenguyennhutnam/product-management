@@ -15,7 +15,13 @@ router.post(
     uploadCloud.uploadSingle,
     controller.createPost
 );
-router.get("/edit/:id", controller.edit);
+router.get("/detail/:id", controller.detail);
+router.get(
+    "/edit/:id",
+    upload.single("avatar"),
+    uploadCloud.uploadSingle,
+    controller.edit
+);
 router.patch(
     "/edit/:id",
     upload.single("avatar"),

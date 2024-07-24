@@ -103,10 +103,12 @@ if (selectOnes) {
             const categorySelectAll = document.querySelector(
                 `input[data-name*=${category}][select-all-category][data-id="${id}"]`
             );
-            if (sameCategoryChecked.length == sameCategory.length) {
-                categorySelectAll.checked = true;
-            } else {
-                categorySelectAll.checked = false;
+            if (categorySelectAll) {
+                if (sameCategoryChecked.length == sameCategory.length) {
+                    categorySelectAll.checked = true;
+                } else {
+                    categorySelectAll.checked = false;
+                }
             }
 
             // Nút tất cả quyền của cột
@@ -127,7 +129,6 @@ if (selectOnes) {
 const submitBtn = document.querySelector("button[type=submit]");
 if (submitBtn) {
     submitBtn.addEventListener("click", (e) => {
-        console.log(123);
         const dataList = [];
         selectOnes.forEach((select) => {
             const id = select.getAttribute("data-id");

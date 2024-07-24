@@ -5,7 +5,7 @@ const productCategoryRoute = require("./product-category.route");
 const roleRoute = require("./role.route");
 const accountRoute = require("./account.route");
 const authRoute = require("./auth.route");
-const { requireAuth } = require("../../helpers/requireAuth.helper");
+const { requireAuth } = require("../../middlewares/admin/requireAuth.middleware.js");
 const systemConfig = require("../../config/system");
 
 module.exports.index = (app) => {

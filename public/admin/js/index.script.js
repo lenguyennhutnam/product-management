@@ -1,3 +1,16 @@
+import { sweetAlert } from "./helper/alert.helper.js";
+
+const updated = sessionStorage.getItem("updated");
+window.onload = () => {
+    if (updated == "success") {
+        sweetAlert(updated, "Thành công", 2000);
+        sessionStorage.clear("updated");
+    } else if (updated == "error") {
+        sweetAlert(updated, "Đã xảy ra lỗi", 3000);
+        sessionStorage.clear("updated");
+    }
+};
+
 const url = new URL(window.location.href);
 // LOAD PAGE
 // add class active to filter btn

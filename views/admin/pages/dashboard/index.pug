@@ -1,4 +1,23 @@
 extends ../../layouts/default.pug
 
 block main 
-  h1(class="mb-4") #{pageTitle}
+  h1(class="mb-4") Thông tin người dùng
+  if (user.fullName)
+    div(class="mb-4") <b>Tên tài khoản:</b> #{user.fullName}
+
+  if (user.avatar)
+    div(class="mb-4")
+      img(
+        src=user.avatar
+        style="width: 100px"
+      )
+
+  if (user.email)
+    div(class="mb-4") <b>Email:</b> #{user.email}
+
+  if (role)
+    div(class="mb-4") <b>Vai trò:</b> #{role.title}
+
+  if (user.phone)
+    div(class="mb-4") <b>Số điện thoại:</b> #{user.phone}
+

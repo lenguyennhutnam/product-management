@@ -1,6 +1,8 @@
 extends ../../layouts/default.pug
+include ../../mixins/back-btn.pug
 
 block main
+  +backBtn("/admin/accounts")
   h1(class="mb-4") Thêm mới tài khoản
 
   form(

@@ -3,39 +3,40 @@ include ../../mixins/back-btn.pug
 
 block main
   +backBtn("/admin/products")
-  if (product.title)
-    h1(class="mb-4") #{product.title}
+  if role.permissions.includes("products_view")
+    if (product.title)
+      h1(class="mb-4") #{product.title}
 
-  if (product.category)
-    div(class="mb-4") <b>Danh mục:</b> #{product.category.title}
+    if (product.category)
+      div(class="mb-4") <b>Danh mục:</b> #{product.category.title}
 
-  if (product.price)
-    div(class="mb-4") <b>Giá:</b> #{product.price}$
+    if (product.price)
+      div(class="mb-4") <b>Giá:</b> #{product.price}$
 
-  if (product.discountPercentage)
-    div(class="mb-4") <b>Giảm giá:</b> #{product.discountPercentage}%
+    if (product.discountPercentage)
+      div(class="mb-4") <b>Giảm giá:</b> #{product.discountPercentage}%
 
-  if (product.stock)
-    div(class="mb-4") <b>Còn lại:</b> #{product.stock}
+    if (product.stock)
+      div(class="mb-4") <b>Còn lại:</b> #{product.stock}
 
-  if (product.thumbnail)
-    div(class="mb-4")
-      img(
-        src=product.thumbnail
-        style="width: 100px"
-      )
+    if (product.thumbnail)
+      div(class="mb-4")
+        img(
+          src=product.thumbnail
+          style="width: 100px"
+        )
 
-  if (product.status)
-    div(class="mb-4")
-      span <b>Trạng thái: </b>
-      if (product.status === "active")
-        span(class="badge badge-success") Hoạt động
-      else
-        span(class="badge badge-danger") Dừng hoạt động
+    if (product.status)
+      div(class="mb-4")
+        span <b>Trạng thái: </b>
+        if (product.status === "active")
+          span(class="badge badge-success") Hoạt động
+        else
+          span(class="badge badge-danger") Dừng hoạt động
 
-  if (product.position)
-    div(class="mb-4") <b>Vị trí:</b> <b>#{product.position}</b>
+    if (product.position)
+      div(class="mb-4") <b>Vị trí:</b> <b>#{product.position}</b>
 
-  if (product.description)
-    div <b>Mô tả sản phẩm</b>
-    div(class="mb-4") !{product.description}
+    if (product.description)
+      div <b>Mô tả sản phẩm</b>
+      div(class="mb-4") !{product.description}

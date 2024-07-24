@@ -14,12 +14,13 @@ block main
         +filter-status(filterStatus)
       .col-6
         +form-search()
-  +card-head("Trạng thái")
-    +action-box([
-      {value: "active", title: "Hoạt động"},
-      {value: "inactive", title: "Ngưng hoạt động"},
-      {value: "toTrash", title: "Xóa"}
-    ])
+  if role.permissions.includes("products_edit")
+    +card-head("Trạng thái")
+      +action-box([
+        {value: "active", title: "Hoạt động"},
+        {value: "inactive", title: "Ngưng hoạt động"},
+        {value: "toTrash", title: "Xóa"}
+      ])
   +card-head("Sắp xếp")
     .row
       .col-5
@@ -42,10 +43,11 @@ block main
           ) Clear
   +card-head("Danh sách")
     .text-right.mb-3
-      a(
-        href=`/${prefixAdmin}/products/create`
-        class="btn btn-outline-success"
-      ) + Thêm mới
+      if role.permissions.includes("products_edit")
+        a(
+          href=`/${prefixAdmin}/products/create`
+          class="btn btn-outline-success"
+        ) + Thêm mới
     table.table.table-hover.table-sm
       thead 
         tr 
@@ -56,8 +58,8 @@ block main
           th Tiêu đề
           th Giá
           th Trạng thái
-          th Hành động
           th Vị trí
+          th Hành động
       tbody 
         each product, index in products 
           tr(product-id=product._id)
@@ -74,27 +76,42 @@ block main
                 ) 
             td #{product.title}
             td #{product.price}
-            td 
-              input(
-              type = "number"
-              name = "position"
-              value = product.position 
-              style="width:60px" 
-              min="0")
             td
               if product.status == 'active' 
-                button(
-                class="badge btn btn-success"
-                change-status-btn
-                ) Hoạt động 
+                if role.permissions.includes("products_edit")
+                  button(
+                  class="badge btn btn-success"
+                  change-status-btn
+                  ) Hoạt động 
+                else
+                  button(
+                  class="badge btn btn-success"
+                  ) Hoạt động 
               else 
-                button(
-                class="badge btn btn-danger"
-                change-status-btn
-                ) Ngừng hoạt động 
+                if role.permissions.includes("products_edit")
+                  button(
+                  class="badge btn btn-danger"
+                  change-status-btn
+                  ) Ngừng hoạt động
+                else
+                  button(
+                  class="badge btn btn-danger"
+                  ) Ngừng hoạt động
+            if role.permissions.includes("products_edit")
+              td
+                input(
+                type = "number"
+                name = "position"
+                value = product.position 
+                style="width:60px" 
+                min="0")
+            else    
+              td #{product.position}
             td
               button(class="btn btn-info btn-sm" detail) Chi tiết
-              button(class="btn btn-warning btn-sm" edit) Sửa
-              button(class="btn btn-danger btn-sm" send-to-trash) Xóa
+              if role.permissions.includes("products_edit")
+                button(class="btn btn-warning btn-sm" edit) Sửa
+              if role.permissions.includes("products_delete")
+                button(class="btn btn-danger btn-sm" send-to-trash) Xóa
     +pagination(pagination)
   script(type="module" src="/admin/js/product.script.js")

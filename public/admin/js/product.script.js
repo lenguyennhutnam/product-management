@@ -23,6 +23,10 @@ const fetchAction = (updateStatusData) => {
         .then((res) => res.json())
         .then((data) => {
             if (data.code == 200) {
+                sessionStorage.setItem("updated", "success");
+                window.location.reload();
+            } else if (data.code == 500) {
+                sessionStorage.setItem("updated", "error");
                 window.location.reload();
             }
         });
@@ -48,20 +52,22 @@ changeStatusAction("products", "product-id");
 
 // Set position
 const posInput = document.querySelectorAll("input[name=position]");
-posInput.forEach((input) => {
-    input.addEventListener("change", (e) => {
-        const productId = input.closest("tr").getAttribute("product-id");
-        const API = `/admin/products/change-position`;
-        fetch(API, {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                productId: productId,
-                position: input.value,
-            }),
+if (posInput) {
+    posInput.forEach((input) => {
+        input.addEventListener("change", (e) => {
+            const productId = input.closest("tr").getAttribute("product-id");
+            const API = `/admin/products/change-position`;
+            fetch(API, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    productId: productId,
+                    position: input.value,
+                }),
+            });
         });
     });
-});
+}
 // End set position

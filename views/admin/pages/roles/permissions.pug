@@ -28,7 +28,7 @@ block main
         +checkboxList("<b> Tất cả quyền<b/>", roles, "permissionsAll", "all-permission")    
         tr
           td(colspan="100")
-            b Sản phẩm
+            b Danh sách sản phẩm
         +checkboxList("Chọn tất cả", roles, "productsAll", "select-all-category")    
         +checkboxList("Xem", roles, "products_view")
         +checkboxList("Thêm mới", roles, "products_create")
@@ -44,10 +44,27 @@ block main
         +checkboxList("Xóa", roles, "product-categories_delete")
         tr
           td(colspan="100")
+            b Nhóm quyền
+        +checkboxList("Truy cập", roles, "roles_view")    
+        tr
+          td(colspan="100")
+            b Phân quyền
+        +checkboxList("Xem", roles, "permissions_view")    
+        +checkboxList("Chỉnh sửa", roles, "permissions_edit")    
+        tr
+          td(colspan="100")
             b Tài khoản
         +checkboxList("Chọn tất cả", roles, "accountsAll", "select-all-category")
         +checkboxList("Xem", roles, "accounts_view")
         +checkboxList("Thêm mới", roles, "accounts_create")
         +checkboxList("Chỉnh sửa", roles, "accounts_edit")
         +checkboxList("Xóa", roles, "accounts_delete")
+        tr
+          td(colspan="100")
+            b Đơn hàng
+        +checkboxList("Chọn tất cả", roles, "ordersAll", "select-all-category")
+        +checkboxList("Xem", roles, "orders_view")
+        +checkboxList("Xác nhận", roles, "orders_confirm")
+        +checkboxList("Thống kê", roles, "orders_statistic")
+        +checkboxList("Hủy", roles, "orders_cancel")
   script(type="module" src="/admin/js/permissions.script.js")

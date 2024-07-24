@@ -18,7 +18,6 @@ module.exports.index = async (req, res) => {
 
         record.roleTitle = role.title;
     }
-
     res.render("admin/pages/accounts/index", {
         pageTitle: "Tài khoản admin",
         records: records,
@@ -45,6 +44,18 @@ module.exports.createPost = async (req, res) => {
     await account.save();
 
     res.redirect(`/${systemConfig.prefixAdmin}/accounts`);
+};
+// [GET] /admin/accounts/detail/:id
+module.exports.detail = async (req, res) => {
+    const id = req.params.id;
+    let account = await Account.findOne({ _id: id, deleted: false }).lean();
+    const role = await Role.findOne({
+        _id: account.role_id,
+    }).lean();
+    account.roleName = role.title;
+    res.render("admin/pages/accounts/detail", {
+        account: account,
+    });
 };
 // [PATCH] /admin/accounts/change-status/:id
 module.exports.changeStatus = async (req, res) => {
