@@ -5,6 +5,7 @@ import {
     trashAction,
     changeStatusAction,
 } from "./helper/action.helper.js";
+import { fireAlert } from "./helper/alert.helper.js";
 
 //Multi action
 const fetchAction = (updateStatusData) => {
@@ -22,13 +23,7 @@ const fetchAction = (updateStatusData) => {
     })
         .then((res) => res.json())
         .then((data) => {
-            if (data.code == 200) {
-                sessionStorage.setItem("updated", "success");
-                window.location.reload();
-            } else if (data.code == 500) {
-                sessionStorage.setItem("updated", "error");
-                window.location.reload();
-            }
+            fireAlert(data.code, data.msg);
         });
 };
 actionBoxSubmit(fetchAction, "product-id");

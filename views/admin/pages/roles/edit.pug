@@ -2,33 +2,35 @@ extends ../../layouts/default.pug
 include ../../mixins/back-btn.pug
 
 block main
-  +backBtn("/admin/roles")
-  h1(class="mb-4") #{pageTitle}
-  form(
-    action=`/${prefixAdmin}/roles/edit/${role._id}?_method=PATCH`
-    method="POST"
-  )
-    div(class="form-group")
-      label(for="title") Tiêu đề
-      input(
-        type="text"
-        class="form-control"
-        id="title"
-        name="title"
-        value=role.title
-        required
-      )
-    div(class="form-group")
-      label(for="desc") Mô tả
-      input(
-        type="text"
-        class="form-control"
-        id="desc"
-        name="description"
-        value=role.description
-      )
-    div(class="form-group")
-      button(
-        type="submit"
-        class="btn btn-primary"
-      ) Cập nhật
+  if role.title == "Admin"
+    +backBtn("/admin/roles")
+    h1(class="mb-4") #{pageTitle}
+    form(
+      action=`/${prefixAdmin}/roles/edit/${roleEdit._id}`
+      method="POST"
+    )
+      div(class="form-group")
+        label(for="title") Tiêu đề
+        input(
+          type="text"
+          class="form-control"
+          id="title"
+          name="title"
+          value=roleEdit.title
+          required
+        )
+      div(class="form-group")
+        label(for="desc") Mô tả
+        input(
+          type="text"
+          class="form-control"
+          id="desc"
+          name="description"
+          value=roleEdit.description
+        )
+      div(class="form-group")
+        button(
+          edit-btn
+          type="submit"
+          class="btn btn-primary"
+        ) Cập nhật

@@ -1,3 +1,5 @@
+import { fireAlert } from "./alert.helper.js";
+
 const _actionCheckAllBtn = document.querySelector(
     "input[name='actionCheckAll']"
 );
@@ -47,6 +49,67 @@ export function actionBoxSubmit(fetchAction, id) {
         });
     }
 }
+// Create action
+export function createAction() {
+    const submitBtn = $("button[create-btn]").get(0);
+    const createForm = $("form[action]").get(0);
+    if (submitBtn && createForm) {
+        const type = document.querySelector("[upload-image-input]");
+        const API = createForm.getAttribute("action");
+        createForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            let data;
+            if (type) {
+                data = new FormData(createForm);
+            } else {
+                const formData = new FormData(createForm);
+                data = new URLSearchParams(formData);
+            }
+            submitBtn.disabled = true;
+            fetch(API, {
+                method: "POST",
+                body: data,
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    fireAlert(data.code, data.msg);
+                    submitBtn.disabled = false;
+                });
+        });
+    }
+}
+// End create action
+// Edit action
+export function editActionSubmit() {
+    const submitBtn = $("button[edit-btn]").get(0);
+    const editForm = $("form[action]").get(0);
+    if (submitBtn && editForm) {
+        const type = document.querySelector("[upload-image-input]");
+        const API = editForm.getAttribute("action");
+        editForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            let data;
+            if (type) {
+                data = new FormData(editForm);
+            } else {
+                const formData = new FormData(editForm);
+                data = new URLSearchParams(formData);
+            }
+            submitBtn.disabled = true;
+            fetch(API, {
+                method: "PATCH",
+                body: data,
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    fireAlert(data.code, data.msg);
+                    submitBtn.disabled = false;
+                });
+        });
+    }
+}
+// End edit action
+
 // Show detail
 export function detailAction(item, idAtt) {
     const detailBtn = document.querySelectorAll("[detail]");
@@ -113,15 +176,12 @@ export function trashAction(item, idAtt) {
             btn.addEventListener("click", (e) => {
                 const itemId = btn.closest("tr").getAttribute(`${idAtt}`);
                 const deleteAPI = `/admin/${item}/delete/${itemId}`;
-                console.log(deleteAPI);
                 fetch(deleteAPI, {
                     method: "PATCH",
                 })
                     .then((res) => res.json())
                     .then((data) => {
-                        if (data.code == 200) {
-                            window.location.reload();
-                        }
+                        fireAlert(data.code, data.msg);
                     });
             });
         });
@@ -145,9 +205,7 @@ export function recoveryAction(idAtt, category) {
             })
                 .then((res) => res.json())
                 .then((data) => {
-                    if (data.code == 200) {
-                        window.location.reload();
-                    }
+                    fireAlert(data.code, data.msg);
                 });
         });
     });
@@ -170,9 +228,7 @@ export function deleteAction(idAtt, category) {
             })
                 .then((res) => res.json())
                 .then((data) => {
-                    if (data.code == 200) {
-                        window.location.reload();
-                    }
+                    fireAlert(data.code, data.msg);
                 });
         });
     });

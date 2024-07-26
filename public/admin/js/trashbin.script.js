@@ -3,6 +3,8 @@ import {
     deleteAction,
     recoveryAction,
 } from "./helper/action.helper.js";
+import { fireAlert } from "./helper/alert.helper.js";
+
 const url = new URL(window.location.href);
 
 const categoryBtn = document.querySelector("[category]");
@@ -41,9 +43,7 @@ const fetchAction = (actionData) => {
     })
         .then((res) => res.json())
         .then((data) => {
-            if (data.code == 200) {
-                window.location.reload();
-            }
+            fireAlert(data.code, data.msg);
         });
 };
 let idAtt = "product-id";

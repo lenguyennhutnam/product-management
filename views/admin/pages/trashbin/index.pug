@@ -8,33 +8,34 @@ include ../../mixins/trashBin/item-list.pug
 
 
 block main 
-  .row
-    .col
-      h1(class="mb-4") Thùng rác
-    .col-2
-      select(class="custom-select" category)
-        option(value="products") Sản phẩm
-        option(value="product-categories") Danh mục sản phẩm
-        option(value="accounts") Tài khoản admin
-  +card-head("Tìm kiếm")
+  if role.title == "Admin"
     .row
-      .col-6
-      .col-6
-        +form-search()
-  +card-head("Hành động")
-    +action-box([
-      {value: "recovery", title: "Khôi phục"},
-      {value: "delete", title: "Xóa"},
-    ])
-  +card-head("Sản phẩm đã xóa")
-    if category == "products"
-      +product-list()
-    else if category == "product-categories"
-      +product-categories-list()
-    else if category == "accounts"
-      +accounts-list()
-    if items.length > 0
-      +pagination(pagination)
-    else 
-      p Thùng rác trống
-  script(type="module" src="/admin/js/trashbin.script.js")
+      .col
+        h1(class="mb-4") Thùng rác
+      .col-2
+        select(class="custom-select" category)
+          option(value="products") Sản phẩm
+          option(value="product-categories") Danh mục sản phẩm
+          option(value="accounts") Tài khoản admin
+    +card-head("Tìm kiếm")
+      .row
+        .col-6
+        .col-6
+          +form-search()
+    +card-head("Hành động")
+      +action-box([
+        {value: "recovery", title: "Khôi phục"},
+        {value: "delete", title: "Xóa"},
+      ])
+    +card-head("Sản phẩm đã xóa")
+      if category == "products"
+        +product-list()
+      else if category == "product-categories"
+        +product-categories-list()
+      else if category == "accounts"
+        +accounts-list()
+      if items.length > 0
+        +pagination(pagination)
+      else 
+        p Thùng rác trống
+    script(type="module" src="/admin/js/trashbin.script.js")

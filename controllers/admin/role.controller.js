@@ -19,15 +19,19 @@ module.exports.create = async (req, res) => {
 };
 // [POST] /admin/roles/create
 module.exports.createPost = async (req, res) => {
-    if (!req.body.title) {
-        req.flash("error", "Tiêu đề không được để trống!");
-        res.redirect("back");
-        return;
+    if (res.locals.role.permissions.includes("roles_create")) {
+        if (!req.body.title) {
+            res.json({ code: 500, msg: "Tiêu đề không được để trống!" });
+            return;
+        }
+        try {
+            const newRole = new Role(req.body);
+            await newRole.save();
+            res.json({ code: 200, msg: "Tạo mới nhóm quyền thành công!" });
+        } catch {
+            res.json({ code: 500, msg: "Đã có lỗi xảy ra!" });
+        }
     }
-    const newRole = new Role(req.body);
-    await newRole.save();
-    req.flash("success", "Thành công");
-    res.redirect("back");
 };
 // [GET] /admin/roles/edit/:id
 module.exports.edit = async (req, res) => {
@@ -36,37 +40,38 @@ module.exports.edit = async (req, res) => {
         const role = await Role.findOne({ _id: id });
         res.render("admin/pages/roles/edit", {
             pageTitle: "Chỉnh sửa nhóm quyền",
-            role: role,
+            roleEdit: role,
         });
     } catch {
-        req.flash("error", "Id không tồn tại");
+        res.redirect("back");
     }
 };
 // [PATCH] /admin/roles/edit/:id
 module.exports.editPatch = async (req, res) => {
-    if (!req.body.title) {
-        req.flash("error", "Tiêu đề không được để trống!");
-        res.redirect("back");
-        return;
-    }
-    const id = req.params.id;
-    try {
-        await Role.updateOne({ _id: id, deleted: false }, req.body);
-        req.flash("success", "Thành công");
-        res.redirect("back");
-    } catch {
-        req.flash("error", "Id không tồn tại");
+    if (res.locals.role.permissions.includes("roles_edit")) {
+        if (!req.body.title) {
+            res.json({ code: 500, msg: "Tiêu đề không được để trống!" });
+            return;
+        }
+        const id = req.params.id;
+        try {
+            await Role.updateOne({ _id: id, deleted: false }, req.body);
+            res.json({ code: 200, msg: "Thành công" });
+        } catch {
+            res.json({ code: 500, msg: "Id không tồn tại" });
+        }
     }
 };
 // [DELETE] /admin/roles/delete/:id
 module.exports.delete = async (req, res) => {
-    const id = req.params.id;
-    try {
-        await Role.deleteOne({ _id: id });
-        req.flash("success", "Xóa thành công");
-        res.json({ code: 200 });
-    } catch {
-        req.flash("error", "Id không tồn tại");
+    if (res.locals.role.permissions.includes("roles_delete")) {
+        const id = req.params.id;
+        try {
+            await Role.deleteOne({ _id: id });
+            res.json({ code: 200, msg: "Xóa thành công" });
+        } catch {
+            res.json({ code: 500, msg: "Id không tồn tại" });
+        }
     }
 };
 
@@ -81,17 +86,19 @@ module.exports.permissions = async (req, res) => {
 };
 // [PATCH] /admin/roles/permissions
 module.exports.permissionPatch = async (req, res) => {
-    const dataList = req.body.dataList;
-    const bulkUpdate = dataList.map((data) => ({
-        updateOne: {
-            filter: { _id: data.id },
-            update: { permissions: data.permissions },
-        },
-    }));
-    try {
-        await Role.bulkWrite(bulkUpdate);
-        res.json({ code: 200, message: "Cập nhật thành công!" });
-    } catch {
-        res.json({ code: 500, message: "Đã xảy ra lỗi!" });
+    if (res.locals.role.permissions.includes("permissions_edit")) {
+        const dataList = req.body.dataList;
+        const bulkUpdate = dataList.map((data) => ({
+            updateOne: {
+                filter: { _id: data.id },
+                update: { permissions: data.permissions },
+            },
+        }));
+        try {
+            await Role.bulkWrite(bulkUpdate);
+            res.json({ code: 200, message: "Cập nhật thành công!" });
+        } catch {
+            res.json({ code: 500, message: "Đã xảy ra lỗi!" });
+        }
     }
 };

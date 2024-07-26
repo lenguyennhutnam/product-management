@@ -18,6 +18,7 @@ const productCategorySchema = new mongoose.Schema(
             default: false,
         },
         timeDelete: Date,
+        createdBy: String,
         slug: {
             type: String,
             slug: "title",

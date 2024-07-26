@@ -49,7 +49,6 @@ module.exports.index = async (req, res) => {
         pagination: pagination,
     });
 };
-
 // [PATCH] /admin/trashbin/recovery/:id
 module.exports.recovery = async (req, res) => {
     const { category } = req.body;
@@ -59,20 +58,16 @@ module.exports.recovery = async (req, res) => {
         accounts: Account,
     };
     const id = req.params.id;
-    if (id) {
-        try {
-            req.flash("success", "Khôi phục thành công");
-            await model[category].updateOne(
-                { _id: id },
-                { deleted: false, status: "inactive" }
-            );
-        } catch {
-            res.send("error");
-        }
+    try {
+        await model[category].updateOne(
+            { _id: id },
+            { deleted: false, status: "inactive" }
+        );
+        res.json({ code: 200, msg: "Khôi phục thành công!" });
+    } catch {
+        res.json({ code: 500, msg: "Lỗi" });
     }
-    res.json({ code: 200 });
 };
-
 // [DELETE] /admin/trashbin/delete/:id
 module.exports.delete = async (req, res) => {
     const { category } = req.body;
@@ -82,11 +77,15 @@ module.exports.delete = async (req, res) => {
         accounts: Account,
     };
     const productId = req.params.id;
-    if (productId) {
-        req.flash("error", "Sản phẩm đã được xóa vĩnh viễn");
+    try {
         await model[category].deleteOne({ _id: productId });
+        res.json({
+            code: 200,
+            msg: "Sản phẩm đã được xóa vĩnh viễn khỏi hệ thống!",
+        });
+    } catch {
+        res.json({ code: 500, msg: "Lỗi" });
     }
-    res.json({ code: 200 });
 };
 
 // [PATCH] /admin/trashbin/recovery-many
@@ -98,9 +97,18 @@ module.exports.recoveryMany = async (req, res) => {
         accounts: Account,
     };
     const { itemIds } = req.body;
-    req.flash("success", `Khôi phục thành công ${itemIds.length} sản phẩm`);
-    await model[category].updateMany({ _id: itemIds }, { deleted: false });
-    res.json({ code: 200 });
+    try {
+        await model[category].updateMany({ _id: itemIds }, { deleted: false });
+        res.json({
+            code: 200,
+            msg: `Khôi phục thành công ${itemIds.length} sản phẩm`,
+        });
+    } catch {
+        res.json({
+            code: 500,
+            msg: "Lỗi",
+        });
+    }
 };
 // [DELETE] /admin/trashbin/delete-many
 module.exports.deleteMany = async (req, res) => {
@@ -111,7 +119,16 @@ module.exports.deleteMany = async (req, res) => {
         accounts: Account,
     };
     const { itemIds } = req.body;
-    req.flash("error", `${itemIds.length} sản phẩm đã được xóa vĩnh viễn`);
-    await model[category].deleteMany({ _id: itemIds });
-    res.json({ code: 200 });
+    try {
+        await model[category].deleteMany({ _id: itemIds });
+        res.json({
+            code: 200,
+            msg: `${itemIds.length} sản phẩm đã được xóa vĩnh viễn`,
+        });
+    } catch {
+        res.json({
+            code: 500,
+            msg: "Lỗi",
+        });
+    }
 };

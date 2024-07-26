@@ -5,6 +5,11 @@ import {
     trashAction,
     changeStatusAction,
 } from "./helper/action.helper.js";
+import { createAction, editActionSubmit } from "./helper/action.helper.js";
+import { fireAlert } from "./helper/alert.helper.js";
+
+createAction() 
+editActionSubmit()
 
 // Change status
 changeStatusAction("product-categories", "productCategory-id");
@@ -26,9 +31,7 @@ const fetchAction = (updateStatusData) => {
     })
         .then((res) => res.json())
         .then((data) => {
-            if (data.code == 200) {
-                window.location.reload();
-            }
+            fireAlert(data.code, data.msg);
         });
 };
 actionBoxSubmit(fetchAction, "productCategory-id");
@@ -50,7 +53,9 @@ trashAction("product-categories", "productCategory-id");
 const posInput = document.querySelectorAll("input[name=position]");
 posInput.forEach((input) => {
     input.addEventListener("change", (e) => {
-        const productId = input.closest("tr").getAttribute("productCategory-id");
+        const productId = input
+            .closest("tr")
+            .getAttribute("productCategory-id");
         const API = `/admin/product-categories/change-position`;
         fetch(API, {
             method: "PATCH",

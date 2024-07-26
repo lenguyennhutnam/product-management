@@ -15,3 +15,14 @@ export function sweetAlert(type, msg, time) {
         title: msg,
     });
 }
+
+export function fireAlert(code, msg) {
+    if (code == 200 && msg) {
+        sessionStorage.setItem("updated", "success");
+        sessionStorage.setItem("msg", msg);
+    } else if (code == 500) {
+        sessionStorage.setItem("updated", "error");
+        sessionStorage.setItem("msg", msg);
+    }
+    window.location.reload();
+}

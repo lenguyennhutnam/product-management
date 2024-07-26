@@ -73,18 +73,18 @@ module.exports.create = async (req, res) => {
 };
 // [POST] /admin/product-categories/create
 module.exports.createPost = async (req, res) => {
-    const numberProduct = await ProductCategory.countDocuments({});
+    if (res.locals.role.permissions.includes("product-categories_edit")) {
+        const numberProduct = await ProductCategory.countDocuments({});
 
-    req.body.position = parseInt(req.body.position) || numberProduct + 1;
-    const newProduct = new ProductCategory(req.body);
-    try {
-        await newProduct.save();
-    } catch {
-        req.flash("error", "Tạo mới không thành công");
-    } finally {
-        req.flash("success", "Tạo mới thành công");
+        req.body.position = parseInt(req.body.position) || numberProduct + 1;
+        const newProduct = new ProductCategory(req.body);
+        try {
+            await newProduct.save();
+            res.json({ code: 200, msg: "Tạo mới thành công!" });
+        } catch {
+            res.json({ code: 500, msg: "Đã xảy ra lỗi!" });
+        }
     }
-    res.redirect(`/${systemConfig.prefixAdmin}/product-categories/create`);
 };
 // [GET] /admin/product-categories/detail/:id
 module.exports.detail = async (req, res) => {
@@ -113,75 +113,81 @@ module.exports.detail = async (req, res) => {
 };
 // [GET] /admin/product-categories/edit/:id
 module.exports.edit = async (req, res) => {
-    const id = req.params.id;
-    const productCategory = await ProductCategory.findOne({
-        _id: id,
-        deleted: false,
-    });
-    res.render("admin/pages/product-categories/edit", {
-        pageTitle: "Chỉnh sửa danh mục sản phẩm",
-        productCategory: productCategory,
-        productCategories: await productCategoryMenu(),
-    });
+    try {
+        const id = req.params.id;
+        const productCategory = await ProductCategory.findOne({
+            _id: id,
+            deleted: false,
+        });
+        res.render("admin/pages/product-categories/edit", {
+            pageTitle: "Chỉnh sửa danh mục sản phẩm",
+            productCategory: productCategory,
+            productCategories: await productCategoryMenu(),
+        });
+    } catch (error) {
+        res.redirect("back");
+    }
 };
 // [PATCH] /admin/product-categories/edit/:id
 module.exports.editPatch = async (req, res) => {
-    try {
-        const id = req.params.id;
-        const numberItem = await ProductCategory.countDocuments({});
+    if (res.locals.role.permissions.includes("accounts_edit")) {
+        try {
+            const id = req.params.id;
+            const numberItem = await ProductCategory.countDocuments({});
 
-        req.body.position = parseInt(req.body.position) || numberItem + 1;
-        await ProductCategory.updateOne(
-            {
-                _id: id,
-                deleted: false,
-            },
-            req.body
-        );
-
-        req.flash("success", "Cập nhật sản phẩm thành công!");
-    } catch (error) {
-        req.flash("error", "Id sản phẩm không hợp lệ!");
+            req.body.position = parseInt(req.body.position) || numberItem + 1;
+            await ProductCategory.updateOne(
+                {
+                    _id: id,
+                    deleted: false,
+                },
+                req.body
+            );
+            res.json({ code: 200, msg: "Chỉnh sửa thành công!" });
+        } catch (error) {
+            res.json({ code: 500, msg: "Đã xảy ra lỗi!" });
+        }
     }
-    res.redirect(`/${systemConfig.prefixAdmin}/product-categories`);
 };
 // [PATCH] /admin/product-categories/delete/:id
 module.exports.delete = async (req, res) => {
-    const itemId = req.params.id;
-    const currdate = new Date();
-    try {
-        if (itemId) {
-            req.flash("success", "Đã chuyển vào thùng rác");
-            await ProductCategory.updateOne(
-                { _id: itemId },
-                { deleted: true, timeDelete: currdate }
-            );
+    if (res.locals.role.permissions.includes("accounts_delete")) {
+        const itemId = req.params.id;
+        const currdate = new Date();
+        try {
+            if (itemId) {
+                await ProductCategory.updateOne(
+                    { _id: itemId },
+                    { deleted: true, timeDelete: currdate }
+                );
+            }
+            res.json({ code: 200, msg: "Đã chuyển vào thùng rác" });
+        } catch (error) {
+            res.json({ code: 500, msg: "Đã xảy ra lỗi!" });
         }
-        res.json({ code: 200 });
-    } catch (err) {
-        res.redirect("back");
     }
 };
 // [PATCH] /admin/product-categories/deleteMulti
 module.exports.deleteMulti = async (req, res) => {
-    const currdate = new Date();
-    const { productIds } = req.body;
-    if (productIds) {
-        req.flash(
-            "success",
-            `Đã chuyển ${productIds.length} sản phẩm vào thùng rác`
-        );
-        await ProductCategory.updateMany(
-            { _id: productIds },
-            { deleted: true, timeDelete: currdate }
-        );
+    if (res.locals.role.permissions.includes("accounts_delete")) {
+        const currdate = new Date();
+        const { productIds } = req.body;
+        try {
+            if (productIds) {
+                await ProductCategory.updateMany(
+                    { _id: productIds },
+                    { deleted: true, timeDelete: currdate }
+                );
+                res.json({ code: 200, msg: "Xóa thành công!" });
+                return;
+            }
+        } catch {}
+        res.json({ code: 500, msg: "Đã xảy ra lỗi!" });
     }
-    res.json({ code: 200 });
 };
 // [PATCH] /admin/product-categories/change-status/:id
 module.exports.changeStatus = async (req, res) => {
     try {
-        req.flash("success", "Cập nhật thành công");
         const changeProduct = await ProductCategory.findOne({
             _id: req.params.id,
         });
@@ -207,24 +213,28 @@ module.exports.changeStatus = async (req, res) => {
 // [PATCH] /admin/product-categories/change-multi-status
 module.exports.changeMultiStatus = async (req, res) => {
     const { action, productIds } = req.body;
-    if (productIds.length > 0) {
+    try {
         await ProductCategory.updateMany(
             { _id: productIds },
             { status: action }
         );
-        req.flash("success", "Cập nhật thành công");
+        res.json({ code: 200, msg: "Cập nhật thành công!" });
+    } catch {
+        res.json({ code: 500, msg: "Đã xảy ra lỗi!" });
     }
-    res.json({ code: 200 });
 };
 
 // [PATCH] /admin/product-categories/change-position
 module.exports.changePosition = async (req, res) => {
     const { productId, position } = req.body;
-    if (productId) {
+    try {
         await ProductCategory.updateOne(
             { _id: productId },
             { position: position }
         );
+        res.json({ code: 200 });
+        return;
+    } catch {
+        res.json({ code: 500 });
     }
-    res.json({ code: 200 });
 };

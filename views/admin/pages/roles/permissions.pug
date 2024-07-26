@@ -2,9 +2,10 @@ extends ../../layouts/default.pug
 include ../../mixins/checkbox-list.pug
 
 block main
-  h1(class="mb-4") Phân quyền
-
-  if(roles)
+  script.
+    var role = !{JSON.stringify(role)};
+  if role.title == "Admin"
+    h1(class="mb-4") Phân quyền
     div(class="text-right")
       button(
         type="submit"
@@ -12,59 +13,62 @@ block main
         button-submit=`/${prefixAdmin}/roles/permissions`
       ) Cập nhật
 
-    table(
-      class="table table-hover table-sm"
-      table-permissions
-    )
-      thead
-        tr
-          th Tính năng
-          each item in roles
-            th(
-              class="text-center"
-              role-id=item.id
-            ) #{item.title}
-      tbody
-        +checkboxList("<b> Tất cả quyền<b/>", roles, "permissionsAll", "all-permission")    
-        tr
-          td(colspan="100")
-            b Danh sách sản phẩm
-        +checkboxList("Chọn tất cả", roles, "productsAll", "select-all-category")    
-        +checkboxList("Xem", roles, "products_view")
-        +checkboxList("Thêm mới", roles, "products_create")
-        +checkboxList("Chỉnh sửa", roles, "products_edit")
-        +checkboxList("Xóa", roles, "products_delete")
-        tr
-          td(colspan="100")
-            b Danh mục sản phẩm
-        +checkboxList("Chọn tất cả", roles, "product-categoriesAll", "select-all-category")    
-        +checkboxList("Xem", roles, "product-categories_view")
-        +checkboxList("Thêm mới", roles, "product-categories_create")
-        +checkboxList("Chỉnh sửa", roles, "product-categories_edit")
-        +checkboxList("Xóa", roles, "product-categories_delete")
-        tr
-          td(colspan="100")
-            b Nhóm quyền
-        +checkboxList("Truy cập", roles, "roles_view")    
-        tr
-          td(colspan="100")
-            b Phân quyền
-        +checkboxList("Xem", roles, "permissions_view")    
-        +checkboxList("Chỉnh sửa", roles, "permissions_edit")    
-        tr
-          td(colspan="100")
-            b Tài khoản
-        +checkboxList("Chọn tất cả", roles, "accountsAll", "select-all-category")
-        +checkboxList("Xem", roles, "accounts_view")
-        +checkboxList("Thêm mới", roles, "accounts_create")
-        +checkboxList("Chỉnh sửa", roles, "accounts_edit")
-        +checkboxList("Xóa", roles, "accounts_delete")
-        tr
-          td(colspan="100")
-            b Đơn hàng
-        +checkboxList("Chọn tất cả", roles, "ordersAll", "select-all-category")
-        +checkboxList("Xem", roles, "orders_view")
-        +checkboxList("Xác nhận", roles, "orders_confirm")
-        +checkboxList("Thống kê", roles, "orders_statistic")
-        +checkboxList("Hủy", roles, "orders_cancel")
-  script(type="module" src="/admin/js/permissions.script.js")
+  table(
+    class="table table-hover table-sm"
+    table-permissions
+  )
+    thead
+      tr
+        th Tính năng
+        each item in roles
+          th(
+            class="text-center"
+            role-id=item.id
+          ) #{item.title}
+    tbody
+      +checkboxList("<b> Tất cả quyền<b/>", roles, "permissionsAll", "all-permission")    
+      tr
+        td(colspan="100")
+          b Danh sách sản phẩm
+      +checkboxList("Chọn tất cả", roles, "productsAll", "select-all-category")    
+      +checkboxList("Xem", roles, "products_view")
+      +checkboxList("Thêm mới", roles, "products_create")
+      +checkboxList("Chỉnh sửa", roles, "products_edit")
+      +checkboxList("Xóa", roles, "products_delete")
+      tr
+        td(colspan="100")
+          b Danh mục sản phẩm
+      +checkboxList("Chọn tất cả", roles, "product-categoriesAll", "select-all-category")    
+      +checkboxList("Xem", roles, "product-categories_view")
+      +checkboxList("Thêm mới", roles, "product-categories_create")
+      +checkboxList("Chỉnh sửa", roles, "product-categories_edit")
+      +checkboxList("Xóa", roles, "product-categories_delete")
+      tr
+        td(colspan="100")
+          b Nhóm quyền
+      +checkboxList("Xem", roles, "roles_view")    
+      +checkboxList("Thêm mới", roles, "roles_create")    
+      +checkboxList("Chỉnh sửa", roles, "roles_edit")    
+      +checkboxList("Xóa", roles, "roles_delete")    
+      tr
+        td(colspan="100")
+          b Phân quyền
+      +checkboxList("Xem", roles, "permissions_view")    
+      +checkboxList("Chỉnh sửa", roles, "permissions_edit")    
+      tr
+        td(colspan="100")
+          b Tài khoản
+      +checkboxList("Chọn tất cả", roles, "accountsAll", "select-all-category")
+      +checkboxList("Xem", roles, "accounts_view")
+      +checkboxList("Thêm mới", roles, "accounts_create")
+      +checkboxList("Chỉnh sửa", roles, "accounts_edit")
+      +checkboxList("Xóa", roles, "accounts_delete")
+      tr
+        td(colspan="100")
+          b Đơn hàng
+      +checkboxList("Chọn tất cả", roles, "ordersAll", "select-all-category")
+      +checkboxList("Xem", roles, "orders_view")
+      +checkboxList("Xác nhận", roles, "orders_confirm")
+      +checkboxList("Thống kê", roles, "orders_statistic")
+      +checkboxList("Hủy", roles, "orders_cancel")
+    script(type="module" src="/admin/js/permissions.script.js")

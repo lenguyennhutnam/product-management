@@ -1,10 +1,11 @@
 header.header.fixed-top
   .container-fluid
-    .row.align-items-center
-      .col-4
+    .row.align-items-center.justify-content-between
+      .col-auto
         .inner-logo
           a(href=`/${prefixAdmin}/dashboard`) Admin
-
-      .col-8
-        .inner-logo
+      if user
+        .col-auto
+          a(href=`/${prefixAdmin}/dashboard` class="btn btn-primary mr-1") #{user.fullName}
+          a(href=`/${prefixAdmin}/auth/logout` class="btn btn-danger") Đăng xuất
 

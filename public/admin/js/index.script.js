@@ -1,13 +1,16 @@
 import { sweetAlert } from "./helper/alert.helper.js";
+import { createAction, editActionSubmit } from "./helper/action.helper.js";
+
+createAction();
+editActionSubmit();
 
 const updated = sessionStorage.getItem("updated");
+const msg = sessionStorage.getItem("msg");
 window.onload = () => {
-    if (updated == "success") {
-        sweetAlert(updated, "Thành công", 2000);
+    if (updated && msg) {
+        sweetAlert(updated, msg, 2000);
         sessionStorage.clear("updated");
-    } else if (updated == "error") {
-        sweetAlert(updated, "Đã xảy ra lỗi", 3000);
-        sessionStorage.clear("updated");
+        sessionStorage.clear("msg");
     }
 };
 

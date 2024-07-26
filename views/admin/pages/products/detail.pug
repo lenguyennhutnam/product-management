@@ -2,8 +2,8 @@ extends ../../layouts/default.pug
 include ../../mixins/back-btn.pug
 
 block main
-  +backBtn("/admin/products")
   if role.permissions.includes("products_view")
+    +backBtn("/admin/products")
     if (product.title)
       h1(class="mb-4") #{product.title}
 

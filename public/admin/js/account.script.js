@@ -5,6 +5,8 @@ import {
     trashAction,
     changeStatusAction,
 } from "./helper/action.helper.js";
+import { createAction, editActionSubmit } from "./helper/action.helper.js";
+import { fireAlert } from "./helper/alert.helper.js";
 
 //Multi action
 const fetchAction = (updateStatusData) => {
@@ -22,9 +24,7 @@ const fetchAction = (updateStatusData) => {
     })
         .then((res) => res.json())
         .then((data) => {
-            if (data.code == 200) {
-                window.location.reload();
-            }
+            fireAlert(data.code, data.msg);
         });
 };
 actionBoxSubmit(fetchAction, "account-id");
@@ -45,3 +45,6 @@ trashAction("accounts", "account-id");
 // Change status
 changeStatusAction("accounts", "account-id");
 // End change status
+
+createAction() 
+editActionSubmit()

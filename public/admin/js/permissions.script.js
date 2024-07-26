@@ -98,7 +98,6 @@ if (selectOnes) {
                 colCheckbox,
                 colCheckboxChecked,
             } = helper(btn);
-
             // Nút chọn tất cả của danh mục
             const categorySelectAll = document.querySelector(
                 `input[data-name*=${category}][select-all-category][data-id="${id}"]`
@@ -110,7 +109,6 @@ if (selectOnes) {
                     categorySelectAll.checked = false;
                 }
             }
-
             // Nút tất cả quyền của cột
             const selectAllPermission = document.querySelector(
                 `input[all-permission][data-id="${id}"]`
@@ -180,5 +178,17 @@ if (submitBtn) {
                     });
                 }
             });
+    });
+}
+
+if (role.title != "Admin") {
+    const inputBtn = document.querySelectorAll("input");
+    inputBtn.forEach((btn) => {
+        btn.onclick = () => false;
+    });
+} else {
+    const adminBtn = document.querySelectorAll(`input[data-id="${role._id}"]`);
+    adminBtn.forEach((btn) => {
+        btn.disabled = true;
     });
 }

@@ -7,92 +7,93 @@ include ../../mixins/action-box.pug
 include ../../mixins/alert.pug
 
 block main 
-  h1(class="mb-4") Danh mục sản phẩm
-  +card-head("Bộ lọc và tìm kiếm")
-    .row
-      .col-6
-        +filter-status(filterStatus)
-      .col-6
-        +form-search()
-  +card-head("Trạng thái")
-    +action-box([
-      {value: "active", title: "Hoạt động"},
-      {value: "inactive", title: "Ngưng hoạt động"},
-      {value: "toTrash", title: "Xóa"}
-    ])
-  +card-head("Sắp xếp")
-    .row
-      .col-5
-        div(sort)
-          select(
-            class="form-control"
-            name="sort"
-            sort-select
-          )
-            option(value="position-desc") Vị trí giảm dần
-            option(value="position-asc") Vị trí tăng dần
-            option(value="title-asc") Tiêu đề A - Z
-            option(value="title-desc") Tiêu đề Z - A
+  if role.permissions.includes("product-categories_view")
+    h1(class="mb-4") Danh mục sản phẩm
+    +card-head("Bộ lọc và tìm kiếm")
+      .row
+        .col-6
+          +filter-status(filterStatus)
+        .col-6
+          +form-search()
+    +card-head("Trạng thái")
+      +action-box([
+        {value: "active", title: "Hoạt động"},
+        {value: "inactive", title: "Ngưng hoạt động"},
+        {value: "toTrash", title: "Xóa"}
+      ])
+    +card-head("Sắp xếp")
+      .row
+        .col-5
+          div(sort)
+            select(
+              class="form-control"
+              name="sort"
+              sort-select
+            )
+              option(value="position-desc") Vị trí giảm dần
+              option(value="position-asc") Vị trí tăng dần
+              option(value="title-asc") Tiêu đề A - Z
+              option(value="title-desc") Tiêu đề Z - A
 
-          button(
-            class="btn btn-danger mt-2"
-            sort-clear
-          ) Clear
-  +card-head("Danh sách")
-    .text-right.mb-3
-      a(
-        href=`/${prefixAdmin}/product-categories/create`
-        class="btn btn-outline-success"
-      ) + Thêm mới
-    table.table.table-hover.table-sm
-      thead 
-        tr 
-          th 
-            input(type="checkbox" name="actionCheckAll")
-          th STT
-          th Hình ảnh
-          th Tiêu đề
-          th Danh mục cha
-          th Vị trí
-          th Trạng thái
-          th Hành động
-      tbody 
-        each productCategory, index in productCategories 
-          tr(productCategory-id=productCategory._id) 
-            td 
-              input(type="checkbox" name="actionChecked")
-            td #{index + 1}
-            td
-              .img-box(style="width: 60px; height: 60px;")
-                img(
-                  class="img-thumbnail"
-                  src = productCategory.thumbnail
-                  width = "auto"
-                  height = "100px"
-                ) 
-            td #{productCategory.title}
-            td #{productCategory.parentName}
-            td 
-              input(
-              type = "number"
-              name = "position"
-              value = productCategory.position 
-              style="width:60px" 
-              min="0")
-            td
-              if productCategory.status == 'active' 
-                button(
-                class="badge btn btn-success"
-                change-status-btn
-                ) Hoạt động 
-              else 
-                button(
-                class="badge btn btn-danger"
-                change-status-btn
-                ) Ngừng hoạt động 
-            td
-              button(class="btn btn-info btn-sm" detail) Chi tiết
-              button(class="btn btn-warning btn-sm" edit) Sửa
-              button(class="btn btn-danger btn-sm" send-to-trash) Xóa
-    +pagination(pagination)
-  script(type="module" src="/admin/js/product-categories.script.js")
+            button(
+              class="btn btn-danger mt-2"
+              sort-clear
+            ) Clear
+    +card-head("Danh sách")
+      .text-right.mb-3
+        a(
+          href=`/${prefixAdmin}/product-categories/create`
+          class="btn btn-outline-success"
+        ) + Thêm mới
+      table.table.table-hover.table-sm
+        thead 
+          tr 
+            th 
+              input(type="checkbox" name="actionCheckAll")
+            th STT
+            th Hình ảnh
+            th Tiêu đề
+            th Danh mục cha
+            th Vị trí
+            th Trạng thái
+            th Hành động
+        tbody 
+          each productCategory, index in productCategories 
+            tr(productCategory-id=productCategory._id) 
+              td 
+                input(type="checkbox" name="actionChecked")
+              td #{index + 1}
+              td
+                .img-box(style="width: 60px; height: 60px;")
+                  img(
+                    class="img-thumbnail"
+                    src = productCategory.thumbnail
+                    width = "auto"
+                    height = "100px"
+                  ) 
+              td #{productCategory.title}
+              td #{productCategory.parentName}
+              td 
+                input(
+                type = "number"
+                name = "position"
+                value = productCategory.position 
+                style="width:60px" 
+                min="0")
+              td
+                if productCategory.status == 'active' 
+                  button(
+                  class="badge btn btn-success"
+                  change-status-btn
+                  ) Hoạt động 
+                else 
+                  button(
+                  class="badge btn btn-danger"
+                  change-status-btn
+                  ) Ngừng hoạt động 
+              td
+                button(class="btn btn-info btn-sm" detail) Chi tiết
+                button(class="btn btn-warning btn-sm" edit) Sửa
+                button(class="btn btn-danger btn-sm" send-to-trash) Xóa
+      +pagination(pagination)
+    script(type="module" src="/admin/js/product-categories.script.js")

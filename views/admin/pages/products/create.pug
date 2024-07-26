@@ -4,8 +4,8 @@ include ../../mixins/multiMenu.pug
 include ../../mixins/back-btn.pug
 
 block main
-  +backBtn("/admin/products")
   if role.permissions.includes("products_create")
+    +backBtn("/admin/products")
     h1(class="mb-4") #{pageTitle}
 
     form(
@@ -40,6 +40,7 @@ block main
         label(for="price") Giá
         input(
           type="number"
+          step="0.01"
           class="form-control"
           id="price"
           name="price"
@@ -112,6 +113,7 @@ block main
         label(for="statusInActive" class="form-check-label") Dừng hoạt động
       div(class="form-group")
         button(
+          create-btn
           create="products"
           type="submit"
           class="btn btn-primary"

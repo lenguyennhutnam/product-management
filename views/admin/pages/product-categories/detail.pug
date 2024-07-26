@@ -2,31 +2,32 @@ extends ../../layouts/default.pug
 include ../../mixins/backBtn.pug
 
 block main
-  +backBtn("/admin/product-categories")
-  if (productCategory.title)
-    h1(class="mb-4" style="padding-top:10px") #{productCategory.title}
+  if role.permissions.includes("product-categories_view")
+    +backBtn("/admin/product-categories")
+    if (productCategory.title)
+      h1(class="mb-4" style="padding-top:10px") #{productCategory.title}
 
-  if (productCategory.thumbnail)
-    div(class="mb-4")
-      img(
-        src=productCategory.thumbnail
-        style="width: 100px"
-      )
+    if (productCategory.thumbnail)
+      div(class="mb-4")
+        img(
+          src=productCategory.thumbnail
+          style="width: 100px"
+        )
 
-  if (productCategory.status)
-    div(class="mb-4")
-      span <b>Trạng thái: </b>
-      if (productCategory.status === "active")
-        span(class="badge badge-success") Hoạt động
-      else
-        span(class="badge badge-danger") Dừng hoạt động
+    if (productCategory.status)
+      div(class="mb-4")
+        span <b>Trạng thái: </b>
+        if (productCategory.status === "active")
+          span(class="badge badge-success") Hoạt động
+        else
+          span(class="badge badge-danger") Dừng hoạt động
 
-  if (productCategory.position)
-    div(class="mb-4") <b>Vị trí:</b> #{productCategory.position}
+    if (productCategory.position)
+      div(class="mb-4") <b>Vị trí:</b> #{productCategory.position}
 
-  if (productCategory.parentItem)
-    div(class="mb-4") <b>Danh mục cha:</b> #{productCategory.parentItem.title}
+    if (productCategory.parentItem)
+      div(class="mb-4") <b>Danh mục cha:</b> #{productCategory.parentItem.title}
 
-  if (productCategory.description)
-    div <b>Mô tả sản phẩm</b>
-    div(class="mb-4") !{productCategory.description}
+    if (productCategory.description)
+      div <b>Mô tả sản phẩm</b>
+      div(class="mb-4") !{productCategory.description}

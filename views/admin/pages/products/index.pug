@@ -7,111 +7,116 @@ include ../../mixins/action-box.pug
 include ../../mixins/alert.pug
 
 block main 
-  h1(class="mb-4") Quản lý sản phẩm
-  +card-head("Bộ lọc và tìm kiếm")
-    .row
-      .col-6
-        +filter-status(filterStatus)
-      .col-6
-        +form-search()
-  if role.permissions.includes("products_edit")
-    +card-head("Trạng thái")
-      +action-box([
-        {value: "active", title: "Hoạt động"},
-        {value: "inactive", title: "Ngưng hoạt động"},
-        {value: "toTrash", title: "Xóa"}
-      ])
-  +card-head("Sắp xếp")
-    .row
-      .col-5
-        div(sort)
-          select(
-            class="form-control"
-            name="sort"
-            sort-select
-          )
-            option(value="position-desc") Vị trí giảm dần
-            option(value="position-asc") Vị trí tăng dần
-            option(value="price-desc") Giá giảm dần
-            option(value="price-asc") Giá tăng dần
-            option(value="title-asc") Tiêu đề A - Z
-            option(value="title-desc") Tiêu đề Z - A
+  if role.permissions.includes("products_view")
+    h1(class="mb-4") Quản lý sản phẩm
+    +card-head("Bộ lọc và tìm kiếm")
+      .row
+        .col-6
+          +filter-status(filterStatus)
+        .col-6
+          +form-search()
+    if role.permissions.includes("products_edit")
+      +card-head("Trạng thái")
+        +action-box([
+          {value: "active", title: "Hoạt động"},
+          {value: "inactive", title: "Ngưng hoạt động"},
+          {value: "toTrash", title: "Xóa"}
+        ])
+    +card-head("Sắp xếp")
+      .row
+        .col-5
+          div(sort)
+            select(
+              class="form-control"
+              name="sort"
+              sort-select
+            )
+              option(value="position-desc") Vị trí giảm dần
+              option(value="position-asc") Vị trí tăng dần
+              option(value="price-desc") Giá giảm dần
+              option(value="price-asc") Giá tăng dần
+              option(value="title-asc") Tiêu đề A - Z
+              option(value="title-desc") Tiêu đề Z - A
 
-          button(
-            class="btn btn-danger mt-2"
-            sort-clear
-          ) Clear
-  +card-head("Danh sách")
-    .text-right.mb-3
-      if role.permissions.includes("products_edit")
-        a(
-          href=`/${prefixAdmin}/products/create`
-          class="btn btn-outline-success"
-        ) + Thêm mới
-    table.table.table-hover.table-sm
-      thead 
-        tr 
-          th 
-            input(type="checkbox" name="actionCheckAll")
-          th STT
-          th Hình ảnh
-          th Tiêu đề
-          th Giá
-          th Trạng thái
-          th Vị trí
-          th Hành động
-      tbody 
-        each product, index in products 
-          tr(product-id=product._id)
-            td 
-              input(type="checkbox" name="actionChecked")
-            td #{index + 1}
-            td
-              .img-box(style="width: 60px; height: 60px;")
-                img(
-                  class="img-thumbnail"
-                  src = product.thumbnail
-                  width = "auto"
-                  height = "100px"
-                ) 
-            td #{product.title}
-            td #{product.price}
-            td
-              if product.status == 'active' 
-                if role.permissions.includes("products_edit")
-                  button(
-                  class="badge btn btn-success"
-                  change-status-btn
-                  ) Hoạt động 
-                else
-                  button(
-                  class="badge btn btn-success"
-                  ) Hoạt động 
-              else 
-                if role.permissions.includes("products_edit")
-                  button(
-                  class="badge btn btn-danger"
-                  change-status-btn
-                  ) Ngừng hoạt động
-                else
-                  button(
-                  class="badge btn btn-danger"
-                  ) Ngừng hoạt động
-            if role.permissions.includes("products_edit")
+            button(
+              class="btn btn-danger mt-2"
+              sort-clear
+            ) Clear
+    +card-head("Danh sách")
+      .text-right.mb-3
+        if role.permissions.includes("products_edit")
+          a(
+            href=`/${prefixAdmin}/products/create`
+            class="btn btn-outline-success"
+          ) + Thêm mới
+      table.table.table-hover.table-sm
+        thead 
+          tr 
+            th 
+              input(type="checkbox" name="actionCheckAll")
+            th STT
+            th Hình ảnh
+            th Tiêu đề
+            th Giá
+            th Trạng thái
+            th Tạo bởi
+            th Vị trí
+            th Hành động
+        tbody 
+          each product, index in products 
+            tr(product-id=product._id)
+              td 
+                input(type="checkbox" name="actionChecked")
+              td #{index + 1}
               td
-                input(
-                type = "number"
-                name = "position"
-                value = product.position 
-                style="width:60px" 
-                min="0")
-            else    
-              td #{product.position}
-            td
-              button(class="btn btn-info btn-sm" detail) Chi tiết
+                .img-box(style="width: 60px; height: 60px;")
+                  img(
+                    class="img-thumbnail"
+                    src = product.thumbnail
+                    width = "auto"
+                    height = "100px"
+                  ) 
+              td #{product.title}
+              td #{product.price}$
+              td
+                if product.status == 'active' 
+                  if role.permissions.includes("products_edit")
+                    button(
+                    class="badge btn btn-success"
+                    change-status-btn
+                    ) Hoạt động 
+                  else
+                    button(
+                    class="badge btn btn-success"
+                    ) Hoạt động 
+                else 
+                  if role.permissions.includes("products_edit")
+                    button(
+                    class="badge btn btn-danger"
+                    change-status-btn
+                    ) Ngừng hoạt động
+                  else
+                    button(
+                    class="badge btn btn-danger"
+                    ) Ngừng hoạt động
+              td(style="max-width: 170px")
+                div(class="text-truncate") #{product.creator}
+                div 10:30 23/01/2003
               if role.permissions.includes("products_edit")
-                button(class="btn btn-warning btn-sm" edit) Sửa
-              if role.permissions.includes("products_delete")
-                button(class="btn btn-danger btn-sm" send-to-trash) Xóa
-    +pagination(pagination)
-  script(type="module" src="/admin/js/product.script.js")
+                td
+                  input(
+                  type = "number"
+                  name = "position"
+                  value = product.position 
+                  style="width:60px" 
+                  min="0")
+              else    
+                td #{product.position}
+              td
+                button(class="btn btn-info btn-sm" detail) Chi tiết
+                if role.permissions.includes("products_edit")
+                  button(class="btn btn-warning btn-sm" edit) Sửa
+                if role.permissions.includes("products_delete")
+                  button(class="btn btn-danger btn-sm" send-to-trash) Xóa
+      +pagination(pagination)
+    script(type="module" src="/admin/js/product.script.js")

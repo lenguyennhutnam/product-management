@@ -1,4 +1,5 @@
 const Product = require("../../models/product.model.js");
+const Account = require("../../models/account.model.js");
 const ProductCategory = require("../../models/product-category.model.js");
 const paginationHelper = require("../../helpers/pagination.helper.js");
 const systemConfig = require("../../config/system.js");
@@ -30,19 +31,27 @@ module.exports.index = async (req, res) => {
         await Product.countDocuments(find)
     );
     // end pagination
-    // Sắp xếp
+    // Sort
     const sort = {};
     if (req.query.sortKey && req.query.sortValue) {
         sort[req.query.sortKey] = req.query.sortValue;
     } else {
         sort.position = "desc";
     }
-    // Hết Sắp xếp
+    // End sort
     const products = await Product.find(find)
         .lean()
         .limit(pagination.limit)
         .skip(pagination.skip)
         .sort(sort);
+    // Get log
+    for (const product of products) {
+        const creator = await Account.findOne({ _id: product.createdBy });
+        if (creator) {
+            product.creator = creator.fullName;
+        }
+    }
+    // End get log
     res.render("admin/pages/products", {
         pageTitle: "Sản phẩm",
         products: products,
@@ -53,7 +62,7 @@ module.exports.index = async (req, res) => {
 };
 // [PATCH] /admin/products/change-status/:id
 module.exports.changeStatus = async (req, res) => {
-    if (res.locals.role.permission.includes("products_edit")) {
+    if (res.locals.role.permissions.includes("products_edit")) {
         try {
             const changeProduct = await Product.findOne({ _id: req.params.id });
             const newStatus =
@@ -81,7 +90,7 @@ module.exports.changeStatus = async (req, res) => {
 };
 // [PATCH] /admin/products/change-multi-status
 module.exports.changeMultiStatus = async (req, res) => {
-    if (res.locals.role.permission.includes("products_edit")) {
+    if (res.locals.role.permissions.includes("products_edit")) {
         const { action, productIds } = req.body;
         if (productIds.length > 0) {
             try {
@@ -89,10 +98,10 @@ module.exports.changeMultiStatus = async (req, res) => {
                     { _id: productIds },
                     { status: action }
                 );
-                res.json({ code: 200 });
+                res.json({ code: 200, msg: "Thành công!" });
                 return;
             } catch {
-                res.json({ code: 500 });
+                res.json({ code: 500, msg: "Đã xảy ra lỗi!" });
             }
         }
     } else {
@@ -101,7 +110,7 @@ module.exports.changeMultiStatus = async (req, res) => {
 };
 // [PATCH] /admin/products/delete/:id
 module.exports.delete = async (req, res) => {
-    if (res.locals.role.permission.includes("products_delete")) {
+    if (res.locals.role.permissions.includes("products_delete")) {
         const productId = req.params.id;
         const currdate = new Date();
         try {
@@ -109,10 +118,10 @@ module.exports.delete = async (req, res) => {
                 { _id: productId },
                 { deleted: true, timeDelete: currdate }
             );
-            res.json({ code: 200 });
+            res.json({ code: 200, msg: "Đã chuyển sản phẩm vào thùng rác!" });
             return;
         } catch (err) {
-            res.json({ code: 500 });
+            res.json({ code: 500, msg: "Lỗi" });
         }
     } else {
         res.send("403");
@@ -120,7 +129,7 @@ module.exports.delete = async (req, res) => {
 };
 // [PATCH] /admin/products/deleteMulti
 module.exports.deleteMulti = async (req, res) => {
-    if (res.locals.role.permission.includes("products_delete")) {
+    if (res.locals.role.permissions.includes("products_delete")) {
         const currdate = new Date();
         const { productIds } = req.body;
         try {
@@ -128,10 +137,13 @@ module.exports.deleteMulti = async (req, res) => {
                 { _id: productIds },
                 { deleted: true, timeDelete: currdate }
             );
-            res.json({ code: 200 });
+            res.json({
+                code: 200,
+                msg: `Đã chuyển ${productIds.length} sản phẩm vào thùng rác`,
+            });
             return;
         } catch {
-            res.json({ code: 500 });
+            res.json({ code: 500, msg: "Lỗi" });
         }
     } else {
         res.send("403");
@@ -139,7 +151,7 @@ module.exports.deleteMulti = async (req, res) => {
 };
 // [PATCH] /admin/products/change-position
 module.exports.changePosition = async (req, res) => {
-    if (res.locals.role.permission.includes("products_edit")) {
+    if (res.locals.role.permissions.includes("products_edit")) {
         const { productId, position } = req.body;
         try {
             await Product.updateOne({ _id: productId }, { position: position });
@@ -161,17 +173,22 @@ module.exports.createPage = async (req, res) => {
 };
 // [POST] /admin/products/create
 module.exports.create = async (req, res) => {
-    if (res.locals.role.permission.includes("products_create")) {
-        req.body.price = parseInt(req.body.price) || 0;
+    if (res.locals.role.permissions.includes("products_create")) {
+        req.body.price = parseFloat(req.body.price) || 0;
         req.body.discountPercentage =
-            parseInt(req.body.discountPercentage) || 0;
+            parseFloat(req.body.discountPercentage) || 0;
         req.body.stock = parseInt(req.body.stock) || 0;
         const numberProduct = await Product.countDocuments({});
 
         req.body.position = parseInt(req.body.position) || numberProduct + 1;
-        const newProduct = new Product(req.body);
-        await newProduct.save();
-        res.redirect(`/${systemConfig.prefixAdmin}/products`);
+        try {
+            req.body.createdBy = res.locals.user._id;
+            const newProduct = new Product(req.body);
+            await newProduct.save();
+            res.json({ code: 200, msg: "Thêm mới thành công" });
+        } catch (error) {
+            res.json({ code: 500, msg: "Lỗi " + error });
+        }
     } else {
         res.send("403");
     }
@@ -201,13 +218,13 @@ module.exports.editPage = async (req, res) => {
 };
 // [PATCH] /admin/products/edit/:id
 module.exports.edit = async (req, res) => {
-    if (res.locals.role.permission.includes("products_edit")) {
+    if (res.locals.role.permissions.includes("products_edit")) {
         try {
             const id = req.params.id;
             //parse to db type
-            req.body.price = parseInt(req.body.price) || 0;
+            req.body.price = parseFloat(req.body.price) || 0;
             req.body.discountPercentage =
-                parseInt(req.body.discountPercentage) || 0;
+                parseFloat(req.body.discountPercentage) || 0;
             req.body.stock = parseInt(req.body.stock) || 0;
             const numberProduct = await Product.countDocuments({});
 
@@ -221,11 +238,10 @@ module.exports.edit = async (req, res) => {
                 req.body
             );
 
-            req.flash("success", "Cập nhật sản phẩm thành công!");
+            res.json({ code: 200, msg: "Cập nhật sản phẩm thành công" });
         } catch (error) {
-            req.flash("error", "Id sản phẩm không hợp lệ!");
+            res.json({ code: 500, msg: "Lỗi " + error });
         }
-        res.redirect(`/${systemConfig.prefixAdmin}/products`);
     } else {
         res.send("403");
     }

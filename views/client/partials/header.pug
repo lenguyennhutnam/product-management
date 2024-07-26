@@ -1,12 +1,16 @@
 header.header 
   .container 
-    .row.align-items-center
-      .col-8
+    .row.align-items-center.justify-content-between
+      .col-6
         .inner-logo
           a(href="/" )
             img(src="/images/shopeeLogo.svg" alt="logo")
-
-      .col-4
-        form(action="/") 
-          input(type="text")
-          button(type="submit") Tim kiem
+      .col-6  
+        .row.justify-content-right
+          .col-9
+            form(action="/" class="input-group p-0") 
+              input(type="text" class="form-control mr-2")
+              button(class="btn btn-info") Tìm kiếm
+          .col.d-flex
+            if token
+              button(class="btn btn-success ml-auto") Đăng nhập

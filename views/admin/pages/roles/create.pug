@@ -2,32 +2,34 @@ extends ../../layouts/default.pug
 include ../../mixins/back-btn.pug
 
 block main
-  +backBtn("/admin/roles")
-  h1(class="mb-4") Thêm mới nhóm quyền
+  if role.title == "Admin"
+    +backBtn("/admin/roles")
+    h1(class="mb-4") Thêm mới nhóm quyền
 
-  form(
-    action=`/${prefixAdmin}/roles/create`
-    method="POST"
-  )
-    div(class="form-group")
-      label(for="title") Tiêu đề
-      input(
-        type="text"
-        class="form-control"
-        id="title"
-        name="title"
-        required
-      )
-    div(class="form-group")
-      label(for="desc") Mô tả
-      input(
-        type="text"
-        class="form-control"
-        id="desc"
-        name="description"
-      )
-    div(class="form-group")
-      button(
-        type="submit"
-        class="btn btn-primary"
-      ) Tạo mới
+    form(
+      action=`/${prefixAdmin}/roles/create`
+      method="POST"
+    )
+      div(class="form-group")
+        label(for="title") Tiêu đề
+        input(
+          type="text"
+          class="form-control"
+          id="title"
+          name="title"
+          required
+        )
+      div(class="form-group")
+        label(for="desc") Mô tả
+        input(
+          type="text"
+          class="form-control"
+          id="desc"
+          name="description"
+        )
+      div(class="form-group")
+        button(
+          create-btn
+          type="submit"
+          class="btn btn-primary"
+        ) Tạo mới

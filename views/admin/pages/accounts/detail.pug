@@ -2,31 +2,32 @@ extends ../../layouts/default.pug
 include ../../mixins/back-btn.pug
 
 block main
-  +backBtn("/admin/accounts")
-  h1(class="mb-4") Thông tin tài khoản
-  if (account.fullName)
-    div(class="mb-4") <b>Tên tài khoản:</b> #{account.fullName}
+  if role.permissions.includes("accounts_view")
+    +backBtn("/admin/accounts")
+    h1(class="mb-4") Thông tin tài khoản
+    if (account.fullName)
+      div(class="mb-4") <b>Tên tài khoản:</b> #{account.fullName}
 
-  if (account.avatar)
-    div(class="mb-4")
-      img(
-        src=account.avatar
-        style="width: 100px"
-      )
+    if (account.avatar)
+      div(class="mb-4")
+        img(
+          src=account.avatar
+          style="width: 100px"
+        )
 
-  if (account.email)
-    div(class="mb-4") <b>Email:</b> #{account.email}
+    if (account.email)
+      div(class="mb-4") <b>Email:</b> #{account.email}
 
-  if (account.roleName)
-    div(class="mb-4") <b>Vai trò:</b> #{account.roleName}
+    if (account.roleName)
+      div(class="mb-4") <b>Vai trò:</b> #{account.roleName}
 
-  if (account.phone)
-    div(class="mb-4") <b>Số điện thoại:</b> #{account.phone}
+    if (account.phone)
+      div(class="mb-4") <b>Số điện thoại:</b> #{account.phone}
 
-  if (account.status)
-    div(class="mb-4")
-      span <b>Trạng thái: </b>
-      if (account.status === "active")
-        span(class="badge badge-success") Hoạt động
-      else
-        span(class="badge badge-danger") Ngừng hoạt động
+    if (account.status)
+      div(class="mb-4")
+        span <b>Trạng thái: </b>
+        if (account.status === "active")
+          span(class="badge badge-success") Hoạt động
+        else
+          span(class="badge badge-danger") Ngừng hoạt động
