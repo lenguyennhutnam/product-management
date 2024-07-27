@@ -7,13 +7,13 @@ module.exports.requireAuth = async (req, res, next) => {
     const userAccount = await Account.findOne({
         token: token,
         deleted: false,
-    }).select("fullName email phone avatar role_id");
+    }).select("fullName email phone avatar role_id status");
     if (!userAccount) {
         res.redirect(`/${systemConfig.prefixAdmin}/auth/login`);
         return;
     }
     const role = await Role.findOne({ _id: userAccount.role_id }).select(
-        "title permissions"
+        "title permissions status"
     );
     res.locals.user = userAccount;
     res.locals.role = role;

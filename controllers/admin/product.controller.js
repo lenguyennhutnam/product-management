@@ -118,10 +118,11 @@ module.exports.delete = async (req, res) => {
     if (res.locals.role.permissions.includes("products_delete")) {
         const productId = req.params.id;
         const currdate = new Date();
+        const deletor = res.locals.user._id;
         try {
             await Product.updateOne(
                 { _id: productId },
-                { deleted: true, timeDelete: currdate }
+                { deleted: true, timeDelete: currdate, deletedBy: deletor }
             );
             res.json({ code: 200, msg: "Đã chuyển sản phẩm vào thùng rác!" });
             return;
@@ -136,11 +137,12 @@ module.exports.delete = async (req, res) => {
 module.exports.deleteMulti = async (req, res) => {
     if (res.locals.role.permissions.includes("products_delete")) {
         const currdate = new Date();
+        const deletor = res.locals.user._id;
         const { productIds } = req.body;
         try {
             await Product.updateMany(
                 { _id: productIds },
-                { deleted: true, timeDelete: currdate }
+                { deleted: true, timeDelete: currdate, deletedBy: deletor }
             );
             res.json({
                 code: 200,

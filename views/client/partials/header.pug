@@ -1,16 +1,18 @@
-header.header 
-  .container 
-    .row.align-items-center.justify-content-between
-      .col-6
+include ../mixins/sub-menu.pug
+
+header.header
+  .container
+    .row.align-items-center
+      .col-3
         .inner-logo
-          a(href="/" )
+          a(href="/")
             img(src="/images/shopeeLogo.svg" alt="logo")
-      .col-6  
-        .row.justify-content-right
-          .col-9
-            form(action="/" class="input-group p-0") 
-              input(type="text" class="form-control mr-2")
-              button(class="btn btn-info") Tìm kiếm
-          .col.d-flex
-            if token
-              button(class="btn btn-success ml-auto") Đăng nhập
+      .col-9
+        .inner-menu
+          ul
+            li
+              a(href="/") Trang chủ
+            li(class="sub-menu")
+              a(href="/products") Sản phẩm
+              if(layoutCategoryProducts)
+                +sub-menu(layoutCategoryProducts)

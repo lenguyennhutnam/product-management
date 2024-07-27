@@ -189,11 +189,12 @@ module.exports.delete = async (req, res) => {
     if (res.locals.role.permissions.includes("accounts_delete")) {
         const itemId = req.params.id;
         const currdate = new Date();
+        const deletor = res.locals.user._id;
         try {
             if (itemId) {
                 await ProductCategory.updateOne(
                     { _id: itemId },
-                    { deleted: true, timeDelete: currdate }
+                    { deleted: true, timeDelete: currdate, deletedBy: deletor }
                 );
             }
             res.json({ code: 200, msg: "Đã chuyển vào thùng rác" });
@@ -206,12 +207,13 @@ module.exports.delete = async (req, res) => {
 module.exports.deleteMulti = async (req, res) => {
     if (res.locals.role.permissions.includes("accounts_delete")) {
         const currdate = new Date();
+        const deletor = res.locals.user._id;
         const { productIds } = req.body;
         try {
             if (productIds) {
                 await ProductCategory.updateMany(
                     { _id: productIds },
-                    { deleted: true, timeDelete: currdate }
+                    { deleted: true, timeDelete: currdate, deletedBy: deletor }
                 );
                 res.json({ code: 200, msg: "Xóa thành công!" });
                 return;

@@ -3,9 +3,10 @@ const productRoute = require("./product.route");
 const {
     requireAuth,
 } = require("../../middlewares/admin/requireAuth.middleware.js");
+const categoryMiddleware = require("../../middlewares/client/category.middleware");
 
 module.exports.index = (app) => {
-    app.use("/", productRoute);
-    // app.use("/", homeRoute);
+    app.use(categoryMiddleware.category);
+    app.use("/", homeRoute);
     app.use("/products", productRoute);
 };

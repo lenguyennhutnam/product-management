@@ -2,6 +2,7 @@ const Product = require("../../models/product.model");
 const ProductCategory = require("../../models/product-category.model.js");
 const Account = require("../../models/account.model.js");
 const paginationHelper = require("../../helpers/pagination.helper.js");
+const moment = require("moment");
 const convertDateTime = require("../../helpers/convertDateTime.helper.js");
 
 // [GET] /admin/trashbin
@@ -26,7 +27,8 @@ module.exports.index = async (req, res) => {
     // pagination
     const pagination = await paginationHelper.pagination(
         req,
-        await model[category].countDocuments(find)
+        await model[category].countDocuments(find),
+        10
     );
 
     const items = await model[category]
@@ -38,7 +40,11 @@ module.exports.index = async (req, res) => {
             timeDelete: "desc",
         });
     for (const item of items) {
-        item.timeDelete = convertDateTime(item.timeDelete);
+        item.timeDelete = moment(item.timeDelete).format("DD/MM/YYYY HH:mm");
+        const deletor = await Account.findOne(item.deletor);
+        if (deletor) {
+            item.deletor = deletor.fullName;
+        }
         item.id = item._id;
     }
     res.render("admin/pages/trashbin", {
@@ -81,10 +87,10 @@ module.exports.delete = async (req, res) => {
         await model[category].deleteOne({ _id: productId });
         res.json({
             code: 200,
-            msg: "Sản phẩm đã được xóa vĩnh viễn khỏi hệ thống!",
+            msg: "Đã xóa vĩnh viễn khỏi hệ thống!",
         });
     } catch {
-        res.json({ code: 500, msg: "Lỗi" });
+        res.json({ code: 500, msg: "Lỗi!" });
     }
 };
 
@@ -101,7 +107,7 @@ module.exports.recoveryMany = async (req, res) => {
         await model[category].updateMany({ _id: itemIds }, { deleted: false });
         res.json({
             code: 200,
-            msg: `Khôi phục thành công ${itemIds.length} sản phẩm`,
+            msg: `Khôi phục thành công!`,
         });
     } catch {
         res.json({
@@ -123,7 +129,7 @@ module.exports.deleteMany = async (req, res) => {
         await model[category].deleteMany({ _id: itemIds });
         res.json({
             code: 200,
-            msg: `${itemIds.length} sản phẩm đã được xóa vĩnh viễn`,
+            msg: `Đã được vĩnh viễn khỏi hệ thống!`,
         });
     } catch {
         res.json({

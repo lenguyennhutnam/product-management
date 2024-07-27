@@ -8,6 +8,7 @@ mixin product-list()
         th Hình ảnh
         th Tiêu đề
         th Giá
+        th Xóa bởi
         th Thời gian xóa
         th Hành động
     if items.length > 0
@@ -27,7 +28,8 @@ mixin product-list()
                 ) 
             td #{item.title}
             td #{item.price}$
-            td #{item.timeDelete.time} #{item.timeDelete.date}
+            td #{item.deletor}
+            td #{item.timeDelete}
             td
               button(class="btn btn-success btn-sm" recovery) Khôi phục
               button(class="btn btn-danger btn-sm" permanent-delete) Xóa vĩnh viễn
@@ -41,6 +43,7 @@ mixin product-categories-list()
         th STT
         th Hình ảnh
         th Tiêu đề
+        th Xóa bởi
         th Thời gian xóa
         th Hành động
     if items.length > 0
@@ -59,7 +62,8 @@ mixin product-categories-list()
                   height = "100px"
                 ) 
             td #{item.title}
-            td #{item.timeDelete.time} #{item.timeDelete.date}
+            td #{item.deletor}
+            td #{item.timeDelete}
             td
               button(class="btn btn-success btn-sm" recovery) Khôi phục
               button(class="btn btn-danger btn-sm" permanent-delete) Xóa vĩnh viễn
@@ -75,6 +79,8 @@ mixin accounts-list()
         th Họ tên
         th Phân quyền
         th Email
+        th Xóa bởi
+        th Thời gian xóa
         th Hành động
     if items.length > 0
       tbody
@@ -91,6 +97,8 @@ mixin accounts-list()
             td #{item.fullName}
             td #{item.roleTitle}
             td #{item.email}
+            td #{item.deletor}
+            td #{item.timeDelete}
             td
               button(class="btn btn-success btn-sm" recovery) Khôi phục
               button(class="btn btn-danger btn-sm" permanent-delete) Xóa vĩnh viễn
