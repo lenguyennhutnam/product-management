@@ -37,6 +37,18 @@ block main
     if (product.position)
       div(class="mb-4") <b>Vị trí:</b> <b>#{product.position}</b>
 
+    if (product.creator)
+      div(class="mb-4") <b>Người tạo:</b> #{product.creator}
+
+    if (product.createdAtDisplay)
+      div(class="mb-4") <b>Ngày tạo:</b> #{product.createdAtDisplay}
+
+    if (product.updater)
+      div(class="mb-4") <b>Người cập nhật cuối:</b> #{product.updater}
+
+    if (product.updatedAtDisplay)
+      div(class="mb-4") <b>Cập nhật lần cuối:</b> #{product.updatedAtDisplay}
+      
     if (product.description)
       div <b>Mô tả sản phẩm</b>
       div(class="mb-4") !{product.description}

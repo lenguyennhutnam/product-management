@@ -1,7 +1,9 @@
 const ProductCategory = require("../../models/product-category.model.js");
+const Account = require("../../models/account.model.js");
 const paginationHelper = require("../../helpers/pagination.helper.js");
 const multiMenu = require("../../helpers/multiMenu.helper.js");
 const productCategoryMenu = require("../../helpers/product-category.helper.js");
+const moment = require("moment");
 const systemConfig = require("../../config/system.js");
 
 // [GET] /admin/product-categories
@@ -28,7 +30,8 @@ module.exports.index = async (req, res) => {
     // pagination
     const pagination = await paginationHelper.pagination(
         req,
-        await ProductCategory.countDocuments(find)
+        await ProductCategory.countDocuments(find),
+        6
     );
     // end pagination
     // Sắp xếp
@@ -46,6 +49,17 @@ module.exports.index = async (req, res) => {
         .skip(pagination.skip)
         .sort(sort);
     for (item of productCategories) {
+        // Get log
+        const creator = await Account.findOne({ _id: item.createdBy });
+        if (creator) {
+            item.creator = creator.fullName;
+        } else {
+            item.creator = "";
+        }
+        // Display time create
+        item.createdAtDisplay = moment(item.createdAt).format(
+            "DD/MM/YYYY HH:mm"
+        );
         if (item.parent_id) {
             const parentItem = await ProductCategory.findOne({
                 _id: item.parent_id,
@@ -101,6 +115,26 @@ module.exports.detail = async (req, res) => {
             });
             productCategory.parentItem = parentItem;
         }
+        // Log
+        const creator = await Account.findOne({
+            _id: productCategory.createdBy,
+        });
+        if (creator) {
+            productCategory.creator = creator.fullName;
+        }
+        productCategory.createdAtDisplay = moment(
+            productCategory.createdAt
+        ).format("DD/MM/YYYY HH:mm");
+        const updater = await Account.findOne({
+            _id: productCategory.updatedBy,
+        });
+        if (updater) {
+            productCategory.updater = updater.fullName;
+        }
+        productCategory.updatedAtDisplay = moment(
+            productCategory.updatedAt
+        ).format("DD/MM/YYYY HH:mm");
+        // End log
         productCategory.parentItem = res.render(
             "admin/pages/product-categories/detail",
             {
@@ -136,6 +170,7 @@ module.exports.editPatch = async (req, res) => {
             const numberItem = await ProductCategory.countDocuments({});
 
             req.body.position = parseInt(req.body.position) || numberItem + 1;
+            req.body.updatedBy = res.locals.user._id;
             await ProductCategory.updateOne(
                 {
                     _id: id,
@@ -187,54 +222,61 @@ module.exports.deleteMulti = async (req, res) => {
 };
 // [PATCH] /admin/product-categories/change-status/:id
 module.exports.changeStatus = async (req, res) => {
-    try {
-        const changeProduct = await ProductCategory.findOne({
-            _id: req.params.id,
-        });
-        const newStatus =
-            changeProduct.status == "active" ? "inactive" : "active";
-        await ProductCategory.updateOne(
-            { _id: req.params.id },
-            { status: newStatus }
-        );
-        res.json({
-            code: 200,
-            oldStatus:
-                changeProduct.status == "inactive"
-                    ? "btn-danger"
-                    : "btn-success",
-            newStatus: newStatus == "inactive" ? "btn-danger" : "btn-success",
-            text: newStatus == "active" ? "Hoạt động" : "Ngừng hoạt động",
-        });
-    } catch (err) {
-        res.redirect("back");
+    if (res.locals.role.permissions.includes("product-categories_edit")) {
+        try {
+            const changeProduct = await ProductCategory.findOne({
+                _id: req.params.id,
+            });
+            const newStatus =
+                changeProduct.status == "active" ? "inactive" : "active";
+            await ProductCategory.updateOne(
+                { _id: req.params.id },
+                { status: newStatus }
+            );
+            res.json({
+                code: 200,
+                oldStatus:
+                    changeProduct.status == "inactive"
+                        ? "btn-danger"
+                        : "btn-success",
+                newStatus:
+                    newStatus == "inactive" ? "btn-danger" : "btn-success",
+                text: newStatus == "active" ? "Hoạt động" : "Ngừng hoạt động",
+            });
+        } catch (err) {
+            res.redirect("back");
+        }
     }
 };
 // [PATCH] /admin/product-categories/change-multi-status
 module.exports.changeMultiStatus = async (req, res) => {
-    const { action, productIds } = req.body;
-    try {
-        await ProductCategory.updateMany(
-            { _id: productIds },
-            { status: action }
-        );
-        res.json({ code: 200, msg: "Cập nhật thành công!" });
-    } catch {
-        res.json({ code: 500, msg: "Đã xảy ra lỗi!" });
+    if (res.locals.role.permissions.includes("product-categories_edit")) {
+        const { action, productIds } = req.body;
+        try {
+            await ProductCategory.updateMany(
+                { _id: productIds },
+                { status: action }
+            );
+            res.json({ code: 200, msg: "Cập nhật thành công!" });
+        } catch {
+            res.json({ code: 500, msg: "Đã xảy ra lỗi!" });
+        }
     }
 };
 
 // [PATCH] /admin/product-categories/change-position
 module.exports.changePosition = async (req, res) => {
-    const { productId, position } = req.body;
-    try {
-        await ProductCategory.updateOne(
-            { _id: productId },
-            { position: position }
-        );
-        res.json({ code: 200 });
-        return;
-    } catch {
-        res.json({ code: 500 });
+    if (res.locals.role.permissions.includes("product-categories_edit")) {
+        const { productId, position } = req.body;
+        try {
+            await ProductCategory.updateOne(
+                { _id: productId },
+                { position: position }
+            );
+            res.json({ code: 200 });
+            return;
+        } catch {
+            res.json({ code: 500 });
+        }
     }
 };

@@ -54,8 +54,9 @@ block main
             th Hình ảnh
             th Tiêu đề
             th Danh mục cha
-            th Vị trí
             th Trạng thái
+            th Tạo bởi
+            th Vị trí
             th Hành động
         tbody 
           each productCategory, index in productCategories 
@@ -73,6 +74,30 @@ block main
                   ) 
               td #{productCategory.title}
               td #{productCategory.parentName}
+              td
+                if productCategory.status == 'active' 
+                  if role.permissions.includes("product-categories_edit")
+                    button(
+                    class="badge btn btn-success"
+                    change-status-btn
+                    ) Hoạt động 
+                  else
+                    button(
+                    class="badge btn btn-success"
+                    ) Hoạt động 
+                else 
+                  if role.permissions.includes("product-categories_edit")
+                    button(
+                    class="badge btn btn-danger"
+                    change-status-btn
+                    ) Ngừng hoạt động
+                  else
+                    button(
+                    class="badge btn btn-danger"
+                    ) Ngừng hoạt động
+              td(style="max-width: 170px")
+                div(class="text-truncate") #{productCategory.creator}
+                div #{productCategory.createdAtDisplay}
               td 
                 input(
                 type = "number"
@@ -80,17 +105,6 @@ block main
                 value = productCategory.position 
                 style="width:60px" 
                 min="0")
-              td
-                if productCategory.status == 'active' 
-                  button(
-                  class="badge btn btn-success"
-                  change-status-btn
-                  ) Hoạt động 
-                else 
-                  button(
-                  class="badge btn btn-danger"
-                  change-status-btn
-                  ) Ngừng hoạt động 
               td
                 button(class="btn btn-info btn-sm" detail) Chi tiết
                 button(class="btn btn-warning btn-sm" edit) Sửa

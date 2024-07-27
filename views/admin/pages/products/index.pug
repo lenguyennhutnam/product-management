@@ -101,7 +101,7 @@ block main
                     ) Ngừng hoạt động
               td(style="max-width: 170px")
                 div(class="text-truncate") #{product.creator}
-                div 10:30 23/01/2003
+                div #{product.createdAtDisplay}
               if role.permissions.includes("products_edit")
                 td
                   input(

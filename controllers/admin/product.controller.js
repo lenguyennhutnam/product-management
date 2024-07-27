@@ -4,6 +4,7 @@ const ProductCategory = require("../../models/product-category.model.js");
 const paginationHelper = require("../../helpers/pagination.helper.js");
 const systemConfig = require("../../config/system.js");
 const productCategoryMenu = require("../../helpers/product-category.helper.js");
+const moment = require("moment");
 // [GET] /admin/products
 module.exports.index = async (req, res) => {
     const find = {
@@ -28,7 +29,8 @@ module.exports.index = async (req, res) => {
     // pagination
     const pagination = await paginationHelper.pagination(
         req,
-        await Product.countDocuments(find)
+        await Product.countDocuments(find),
+        5
     );
     // end pagination
     // Sort
@@ -50,6 +52,9 @@ module.exports.index = async (req, res) => {
         if (creator) {
             product.creator = creator.fullName;
         }
+        product.createdAtDisplay = moment(product.createdAt).format(
+            "DD/MM/YYYY HH:mm"
+        );
     }
     // End get log
     res.render("admin/pages/products", {
@@ -230,6 +235,7 @@ module.exports.edit = async (req, res) => {
 
             req.body.position =
                 parseInt(req.body.position) || numberProduct + 1;
+            req.body.updatedBy = res.locals.user._id;
             await Product.updateOne(
                 {
                     _id: id,
@@ -260,7 +266,21 @@ module.exports.detail = async (req, res) => {
                 _id: product.category_id,
             }).lean();
         }
-
+        // Log
+        const creator = await Account.findOne({ _id: product.createdBy });
+        if (creator) {
+            product.creator = creator.fullName;
+        }
+        product.createdAtDisplay = moment(product.createdAt).format(
+            "DD/MM/YYYY HH:mm"
+        );
+        const updater = await Account.findOne({ _id: product.updatedBy });
+        if (updater) {
+            product.updater = updater.fullName;
+        }
+        product.updatedAtDisplay = moment(product.updatedAt).format(
+            "DD/MM/YYYY HH:mm"
+        );
         if (product) {
             res.render("admin/pages/products/detail", {
                 pageTitle: "Chi tiết sản phẩm",

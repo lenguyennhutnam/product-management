@@ -1,5 +1,5 @@
 extends ../../layouts/default.pug
-include ../../mixins/backBtn.pug
+include ../../mixins/back-btn.pug
 
 block main
   if role.permissions.includes("product-categories_view")
@@ -27,6 +27,18 @@ block main
 
     if (productCategory.parentItem)
       div(class="mb-4") <b>Danh mục cha:</b> #{productCategory.parentItem.title}
+
+    if (productCategory.creator)
+      div(class="mb-4") <b>Người tạo:</b> #{productCategory.creator}
+
+    if (productCategory.createdAtDisplay)
+      div(class="mb-4") <b>Ngày tạo:</b> #{productCategory.createdAtDisplay}
+
+    if (productCategory.updater)
+      div(class="mb-4") <b>Người cập nhật cuối:</b> #{productCategory.updater}
+
+    if (productCategory.updatedAtDisplay)
+      div(class="mb-4") <b>Cập nhật lần cuối:</b> #{productCategory.updatedAtDisplay}
 
     if (productCategory.description)
       div <b>Mô tả sản phẩm</b>
