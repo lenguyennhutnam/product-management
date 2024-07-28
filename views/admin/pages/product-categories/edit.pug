@@ -4,7 +4,7 @@ include ../../mixins/back-btn.pug
 
 block main
   if role.permissions.includes("product-categories_edit")
-    +backBtn("/admin/product-categories")
+    +backBtn()
     h1(class="mb-4") #{pageTitle}
     form(
       action=`/${prefixAdmin}/product-categories/edit/${productCategory._id}`

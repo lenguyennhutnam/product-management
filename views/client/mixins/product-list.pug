@@ -1,0 +1,18 @@
+mixin product-list(title, list)
+  .container.my-3
+    .row
+      .col-12
+        +box-head(title)
+    .row
+      each product in list
+        .col-4.mb-3
+          .product-item
+            .inner-image
+              a(href=`/products/${product.slug}`)
+                img(src=product.thumbnail alt=product.name)
+            .inner-content
+              h3.inner-title 
+                a(href=`/products/${product.slug}`) #{product.title}
+                .inner-price-new #{product.newPrice}$
+                .inner-price-old #{product.price}$
+                .inner-discount -#{product.discountPercentage}%

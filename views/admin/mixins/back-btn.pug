@@ -1,5 +1,10 @@
-mixin backBtn(route)
-  a(class="btn btn-light" href=route
+mixin backBtn()
+  a(class="btn btn-light" href="#"
     style="position: fixed; background-color: #ececec; top: 70px;"
+    onclick="goBack()"
     ) &lt;
   p
+  script.
+    function goBack() {
+    window.history.back();
+    }

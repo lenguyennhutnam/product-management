@@ -3,7 +3,7 @@ include ../../mixins/back-btn.pug
 
 block main
   if role.permissions.includes("product-categories_view")
-    +backBtn("/admin/product-categories")
+    +backBtn()
     if (productCategory.title)
       h1(class="mb-4" style="padding-top:10px") #{productCategory.title}
 

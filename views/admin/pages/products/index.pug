@@ -76,7 +76,7 @@ block main
                     width = "auto"
                     height = "100px"
                   ) 
-              td #{product.title}
+              td <span style="color:red">#{product.featured == "1" ? "(HOT)" : ""}</span> #{product.title}
               td #{product.price}$
               td
                 if product.status == 'active' 
