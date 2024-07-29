@@ -16,18 +16,54 @@ if (addToCartFrm) {
                         position: "center",
                         icon: "success",
                         title: data.message,
-                        showConfirmButton: false,
-                        timer: 1500,
+                        showConfirmButton: true,
+                        timer: 2500,
+                    }).then(() => {
+                        window.location.reload();
                     });
                 } else if (data.code == 500) {
                     Swal.fire({
                         position: "center",
                         icon: "error",
                         title: data.message,
-                        showConfirmButton: false,
-                        timer: 2000,
+                        showConfirmButton: true,
+                        timer: 2500,
+                    }).then(() => {
+                        window.location.reload();
                     });
                 }
             });
+    });
+}
+
+const cartTable = document.querySelector("[cart-table]");
+if (cartTable) {
+    const inputQuantity = cartTable.querySelectorAll("input[name='quantity']");
+    inputQuantity.forEach((input) => {
+        input.addEventListener("change", (e) => {
+            const quantity = input.value;
+            const newPrice = input.getAttribute("new-price");
+            const productId = input.getAttribute("item-id");
+            if (productId && quantity > 0) {
+                fetch(`/cart/update`, {
+                    method: "PATCH",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        productId: productId,
+                        quantity: quantity,
+                        newPrice: newPrice,
+                    }),
+                })
+                    .then((res) => res.json())
+                    .then((data) => {
+                        const totalPriceTd = input
+                            .closest("tr")
+                            .querySelector("td[total-price]");
+                        totalPriceTd.innerText = data.totalPrice + "$";
+                    });
+            }
+        });
     });
 }
