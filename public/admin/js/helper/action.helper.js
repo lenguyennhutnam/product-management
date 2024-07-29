@@ -89,6 +89,7 @@ export function editActionSubmit() {
         editForm.addEventListener("submit", async (e) => {
             e.preventDefault();
             let data;
+            // Co anh
             if (type) {
                 data = new FormData(editForm);
             } else {

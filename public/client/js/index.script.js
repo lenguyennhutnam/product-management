@@ -67,3 +67,21 @@ if (cartTable) {
         });
     });
 }
+
+const checkoutFrm = document.querySelector("form[checkout");
+if (checkoutFrm) {
+    checkoutFrm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const API = checkoutFrm.getAttribute("action");
+        const formData = new FormData(checkoutFrm);
+        const data = new URLSearchParams(formData);
+        fetch(API, {
+            method: "POST",
+            body: data,
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                window.location.href = data.link;
+            });
+    });
+}

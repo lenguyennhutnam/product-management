@@ -1,0 +1,65 @@
+extends ../../layouts/default.pug
+include ../../mixins/filter-status.pug
+include ../../mixins/form-search.pug
+include ../../mixins/pagination.pug
+include ../../mixins/card-head.pug
+include ../../mixins/action-box.pug
+include ../../mixins/alert.pug
+
+block main 
+  if role.permissions.includes("orders_view")
+    h1(class="mb-4") #{pageTitle}
+    +card-head("Bộ lọc và tìm kiếm")
+      .row
+        .col-6
+          +form-search()
+    +card-head("Sắp xếp")
+      .row
+        .col-5
+          div(sort)
+            select(
+              class="form-control"
+              name="sort"
+              sort-select
+            )
+              option(value="position-desc") Vị trí giảm dần
+              option(value="position-asc") Vị trí tăng dần
+              option(value="price-desc") Giá giảm dần
+              option(value="price-asc") Giá tăng dần
+              option(value="title-asc") Tiêu đề A - Z
+              option(value="title-desc") Tiêu đề Z - A
+
+            button(
+              class="btn btn-danger mt-2"
+              sort-clear
+            ) Clear
+    +card-head("Danh sách")
+      table.table.table-hover.table-sm
+        thead 
+          tr 
+            th 
+              input(type="checkbox" name="actionCheckAll")
+            th STT
+            th Tên người đặt
+            th Số điện thoại
+            th Địa chỉ
+            th Số lượng sản phẩm
+            th Tổng tiền
+            th Hành động
+        tbody 
+          each order, index in orders 
+            tr(order-id=123)
+              td 
+                input(type="checkbox" name="actionChecked")
+              td #{index + 1}
+              td #{order.userInfo.fullName}
+              td #{order.userInfo.phone}
+              td #{order.userInfo.address}
+              td 123
+              td #{order.totalPrice}$
+              td
+                button(class="btn btn-info btn-sm" detail) Chi tiết
+                if role.permissions.includes("orders_cancel")
+                  button(class="btn btn-danger btn-sm" send-to-trash) Hủy
+      +pagination(pagination)
+    script(type="module" src="/admin/js/order.script.js")

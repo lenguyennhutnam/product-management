@@ -9,6 +9,9 @@
       if role.permissions.includes("product-categories_view")
         li 
           a(href=`/${prefixAdmin}/product-categories`) Danh mục sản phẩm
+      if role.permissions.includes("orders_view")
+        li 
+          a(href=`/${prefixAdmin}/orders`) Danh sách đơn hàng
       if role.permissions.includes("permissions_view")
         li 
           a(href=`/${prefixAdmin}/roles/permissions`) Phân quyền
