@@ -29,6 +29,7 @@ block main
             div(class="inner-stock") Còn lại <span>#{product.stock}</span> sản phẩm
 
           form(
+            add-to-cart
             action=`/cart/add/${product.id}`
             method="POST"
           )

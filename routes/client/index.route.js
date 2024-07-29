@@ -1,14 +1,14 @@
 const homeRoute = require("./home.route");
 const productRoute = require("./product.route");
 const searchRoute = require("./search.route");
-const {
-    requireAuth,
-} = require("../../middlewares/admin/requireAuth.middleware.js");
-const categoryMiddleware = require("../../middlewares/client/category.middleware");
+const cartRoute = require("./cart.route");
+const { category } = require("../../middlewares/client/category.middleware");
+const { cart } = require("../../middlewares/client/cart.middleware");
 
 module.exports.index = (app) => {
-    app.use(categoryMiddleware.category);
+    app.use(category, cart);
     app.use("/", homeRoute);
+    app.use("/cart", cartRoute);
     app.use("/products", productRoute);
     app.use("/search", searchRoute);
 };
