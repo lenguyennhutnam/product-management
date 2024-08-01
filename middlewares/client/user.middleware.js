@@ -6,6 +6,7 @@ module.exports.userInfor = async (req, res, next) => {
             tokenUser: req.cookies.tokenUser,
             deleted: false,
         });
+        
         if (user) {
             res.locals.user = user;
         }
