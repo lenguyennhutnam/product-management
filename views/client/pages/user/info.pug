@@ -1,0 +1,13 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+
+block main
+  h1 #{pageTitle}
+  div(class="mb-4")
+    img(
+      src=user.avatar
+      style="width: 100px"
+    )
+  div(class="mb-4") <b>Họ tên:</b> #{user.fullName}
+  div(class="mb-4") <b>Email:</b> #{user.email}
+  div(class="mb-4") <b>Số điện thoại:</b> #{user.phone}

@@ -2,6 +2,7 @@ const md5 = require("md5");
 const User = require("../../models/user.model");
 const ForgotPassword = require("../../models/forgot-password.model");
 const { generateRandomNumber } = require("../../helpers/generate.helper");
+const { sendMail } = require("../../helpers/sendMail.helper");
 
 const generateHelper = require("../../helpers/generate.helper");
 
@@ -102,6 +103,12 @@ module.exports.forgotPasswordPost = async (req, res) => {
     };
     const forgotPassword = new ForgotPassword(forgotPasswordData);
     await forgotPassword.save();
+    const subject = "Mã OTP lấy lại mật khẩu.";
+    const htmlSendMail = `Mã OTP xác thực của bạn là <b style="color: green;">${forgotPasswordData.otp}</b>. Mã OTP có hiệu lực trong 5 phút. Vui lòng không cung cấp mã OTP cho người khác.`;
+    const result = sendMail("nlee2k3@gmail.com", subject, htmlSendMail);
+    if (!result) {
+        console.log("false");
+    }
     res.redirect(`/user/password/otp?email=${email}`);
 };
 // [GET] /user/password/otp
@@ -132,6 +139,7 @@ module.exports.resetPassword = async (req, res) => {
 };
 // [PATCH] /user/password/reset
 module.exports.resetPasswordPatch = async (req, res) => {
+    // qcuk anor rrtb ntsy
     const password = req.body.password;
     const tokenUser = req.cookies.tokenUser;
     await User.updateOne(
@@ -144,4 +152,13 @@ module.exports.resetPasswordPatch = async (req, res) => {
         }
     );
     res.redirect("/");
+};
+// [GET] /user/info
+module.exports.info = async (req, res) => {
+    const tokenUser = req.cookies.tokenUser;
+    const user = await User.findOne({ tokenUser: tokenUser });
+    res.render("client/pages/user/info", {
+        pageTitle: "Thông tin người dùng",
+        user: user,
+    });
 };

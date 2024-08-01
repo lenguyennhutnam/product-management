@@ -1,3 +1,14 @@
+// Show alert
+const showAlert = document.querySelector(".show-alert");
+if (showAlert) {
+    let time = showAlert.getAttribute("show-alert") || 2000;
+    time = parseInt(time);
+    setTimeout(() => {
+        showAlert.classList.add("hidden");
+    }, time);
+}
+// End show alert
+
 const addToCartFrm = document.querySelector("[add-to-cart]");
 if (addToCartFrm) {
     const API = addToCartFrm.getAttribute("action");

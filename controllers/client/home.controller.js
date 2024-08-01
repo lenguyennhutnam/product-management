@@ -1,6 +1,7 @@
 const Product = require("../../models/product.model");
 const newPrice = require("../../helpers/caculateNewPrice.helper");
 
+// [GET] /
 module.exports.index = async (req, res) => {
     const products = await Product.find({
         featured: 1,
