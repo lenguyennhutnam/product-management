@@ -4,7 +4,11 @@ const flash = require("express-flash");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const methodOverride = require("method-override");
-const path = require('path');
+const path = require("path");
+const http = require("http");
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server);
 
 require("dotenv").config();
 const systemConfig = require("./config/system");
@@ -27,7 +31,10 @@ app.use(cookieParser("keyboard cat"));
 app.use(session({ cookie: { maxAge: 2000 } }));
 app.use(flash());
 // End flash
-app.use('/tinymce', express.static(path.join(__dirname, 'node_modules', 'tinymce')));
+app.use(
+    "/tinymce",
+    express.static(path.join(__dirname, "node_modules", "tinymce"))
+);
 app.set("views", `${__dirname}/views`);
 app.set("view engine", "pug");
 app.use(express.static(`${__dirname}/public`));
@@ -37,6 +44,12 @@ app.locals.prefixAdmin = systemConfig.prefixAdmin;
 
 routerAdmin.index(app);
 routerClient.index(app);
+
+app.get("*", (req, res) => {
+    res.render("client/pages/errors/404", {
+        pageTitle: "404 Not Found",
+    });
+});
 
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
