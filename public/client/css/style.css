@@ -232,6 +232,8 @@
 
 .chat .inner-body {
     padding: 10px;
+    height: 450px;
+    overflow-y: scroll;
 }
 
 .chat .inner-body .inner-name {
@@ -283,3 +285,15 @@
 }
 
 /* End chat */
+
+/* Tooltip */
+.tooltip {
+    visibility: hidden;
+}
+
+.tooltip.shown {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* End Tooltip */

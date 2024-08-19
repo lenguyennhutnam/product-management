@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const { requireAuth } = require("../../middlewares/client/user.middleware");
 
 const controller = require("../../controllers/client/user.controller");
 
@@ -13,8 +14,8 @@ router.get("/password/forgot", controller.forgotPassword);
 router.post("/password/forgot", controller.forgotPasswordPost);
 router.get("/password/otp", controller.otpPassword);
 router.post("/password/otp", controller.otpPasswordPost);
-router.get("/password/reset", controller.resetPassword);
-router.patch("/password/reset", controller.resetPasswordPatch);
-router.get("/info", controller.info);
+router.get("/password/reset", requireAuth, controller.resetPassword);
+router.patch("/password/reset", requireAuth, controller.resetPasswordPatch);
+router.get("/info", requireAuth, controller.info);
 
 module.exports = router;
