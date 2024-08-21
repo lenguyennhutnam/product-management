@@ -1,20 +1,18 @@
 const Chat = require("../../models/chat.model");
-const User = require("../../models/user.model");
 const streamUpload = require("../../helpers/streamUpload.helper");
 
-
-// [GET] /chat
-module.exports.index = async (req, res) => {
+module.exports = (req, res) => {
     const userId = res.locals.user.id;
-    // SocketIO
+    const fullName = res.locals.user.fullName;
+
     _io.once("connection", (socket) => {
-        console.log(`User ${socket.id} connected`);
+        // CLIENT_SEND_MESSAGE
         socket.on("CLIENT_SEND_MSG", async (data) => {
             const chatData = {
                 userId: userId,
                 content: data.content,
             };
-            // Upload img
+
             const linkImages = [];
 
             for (const image of data.images) {
@@ -23,41 +21,27 @@ module.exports.index = async (req, res) => {
             }
 
             chatData.images = linkImages;
-            // End upload img
 
+            // Lưu data vào database
             const chat = new Chat(chatData);
-
-            const user = await User.findOne({ _id: userId });
-            const fullName = user.fullName;
-
             await chat.save();
+
+            // Trả tin nhắn realtime về cho mọi người (Làm sau)
             _io.emit("SERVER_RETURN_MSG", {
                 userId: userId,
                 fullName: fullName,
                 content: data.content,
                 images: linkImages,
             });
+        });
 
-            // CLIENT_SEND_TYPING
-            socket.on("CLIENT_SEND_TYPING", (type) => {
-                socket.broadcast.emit("SERVER_RETURN_TYPING", {
-                    userId: userId,
-                    fullName: fullName,
-                    type: type,
-                });
+        // CLIENT_SEND_TYPING
+        socket.on("CLIENT_SEND_TYPING", (type) => {
+            socket.broadcast.emit("SERVER_RETURN_TYPING", {
+                userId: userId,
+                fullName: fullName,
+                type: type,
             });
         });
-    });
-    // End socketIO
-
-    const chats = await Chat.find({});
-
-    for (const chat of chats) {
-        const info = await User.findOne({ _id: chat.userId });
-        chat.fullName = info.fullName;
-    }
-    res.render("client/pages/chat", {
-        pageTitle: "Chat",
-        chats: chats,
     });
 };
