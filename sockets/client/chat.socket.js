@@ -6,6 +6,7 @@ module.exports = (req, res) => {
     const fullName = res.locals.user.fullName;
 
     _io.once("connection", (socket) => {
+        console.log("User connected");
         // CLIENT_SEND_MESSAGE
         socket.on("CLIENT_SEND_MSG", async (data) => {
             const chatData = {

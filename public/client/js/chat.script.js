@@ -76,7 +76,6 @@ if (form) {
 
 // SERVER RETURN MSG
 socket.on("SERVER_RETURN_MSG", (data) => {
-    const { userId, fullName, content } = data;
     const chatBox = document.querySelector(".inner-body");
     const id = document.querySelector(".chat").getAttribute("user-id");
     const div = document.createElement("div");
