@@ -16,19 +16,19 @@ router.patch("/delete-multi", controller.deleteMulti);
 router.patch("/change-position", controller.changePosition);
 router.get("/create", controller.createPage);
 router.post(
-    "/create",
-    upload.single("thumbnail"),
-    uploadCloud.uploadSingle,
-    validate.createPost,
-    controller.create
+  "/create",
+  upload.single("thumbnail"),
+  uploadCloud.uploadSingle,
+  validate.createPost,
+  controller.create
 );
 router.get("/edit/:id", controller.editPage);
 router.patch(
-    "/edit/:id",
-    upload.single("thumbnail"),
-    uploadCloud.uploadSingle,
-    validate.createPost,
-    controller.edit
+  "/edit/:id",
+  upload.single("thumbnail"),
+  uploadCloud.uploadSingle,
+  validate.createPost,
+  controller.edit
 );
 router.get("/detail/:id", controller.detail);
 

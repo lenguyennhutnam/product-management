@@ -10,20 +10,20 @@ const upload = multer();
 router.get("/", controller.index);
 router.get("/create", controller.create);
 router.post(
-    "/create",
-    upload.single("thumbnail"),
-    uploadCloud.uploadSingle,
-    validate.createPost,
-    controller.createPost
+  "/create",
+  upload.single("thumbnail"),
+  uploadCloud.uploadSingle,
+  validate.createPost,
+  controller.createPost
 );
 router.get("/detail/:id", controller.detail);
 router.get("/edit/:id", controller.edit);
 router.patch(
-    "/edit/:id",
-    upload.single("thumbnail"),
-    uploadCloud.uploadSingle,
-    validate.createPost,
-    controller.editPatch
+  "/edit/:id",
+  upload.single("thumbnail"),
+  uploadCloud.uploadSingle,
+  validate.createPost,
+  controller.editPatch
 );
 router.patch("/delete/:id", controller.delete);
 router.patch("/delete-multi", controller.deleteMulti);
