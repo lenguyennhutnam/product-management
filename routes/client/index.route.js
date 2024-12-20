@@ -6,6 +6,7 @@ const checkoutRoute = require("./checkout.route");
 const userRoute = require("./user.route");
 const chatRoute = require("./chat.route");
 const usersRoute = require("./users.route");
+const redisRoute = require("./redis.route");
 const { setting } = require("../../middlewares/client/setting.middleware");
 const {
   userInfor,
@@ -18,6 +19,7 @@ module.exports.index = (app) => {
   app.use(category, cart, userInfor, setting);
   app.use("/", homeRoute);
   app.use("/cart", cartRoute);
+  app.use("/redis", redisRoute);
   app.use("/products", productRoute);
   app.use("/search", searchRoute);
   app.use("/checkout", checkoutRoute);

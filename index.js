@@ -23,16 +23,22 @@ const routerAdmin = require("./routes/admin/index.route");
 const database = require("./config/database");
 database.connect();
 
-const redis = require("redis");
+// const redis = require("redis");
 
-const redisClient = redis.createClient(6379);
-redisClient
-  .connect()
-  .then(() => console.log("Connected to Redis"))
-  .catch((err) => console.error("Redis connection error:", err));
+// // const redisClient = redis.createClient({ url: process.env.REDIS_CONN_STRING });
+// const redisClient = redis.createClient(6379);
 
-// Attach the client to the app
+// redisClient
+//   .connect()
+//   .then(() => console.log("Connected to Redis"))
+//   .catch((err) => console.error("Redis connection error:", err));
+
+// Attach redis client to the app
+const { redisClient } = require("./config/redis");
 app.set("redisClient", redisClient);
+// redisClient.flushall("ASYNC", function (err, succeeded) {
+//   console.log("OK");
+// });
 
 // parse application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
