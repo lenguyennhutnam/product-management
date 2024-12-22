@@ -67,5 +67,5 @@ module.exports.detail = async (req, res) => {
       res.redirect("/");
       return;
     }
-  }, 1000); // Delay in milliseconds
+  }, 1000); 
 };
