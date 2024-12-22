@@ -51,9 +51,9 @@ module.exports.detail = async (req, res) => {
   const redisClient = req.app.get("redisClient");
   const slug = req.params.slug;
   // Lấy danh sách slug sản phẩm
-  const slugList = await redisClient.get("slug");
+  const slugKey = await redisClient.get(slug);
   let dataFromRedis = false;
-  if (!slugList) {
+  if (!slugKey) {
     // Nếu chưa tồn tại, thêm slug vào redis
     product = await Product.findOne({
       slug: slug,
@@ -64,31 +64,11 @@ module.exports.detail = async (req, res) => {
       (1 - product.discountPercentage / 100) *
       product.price
     ).toFixed(2);
-    const slugData = {
-      [slug]: product,
-    };
-    await redisClient.set("slug", JSON.stringify(slugData));
+    await redisClient.set(slug, JSON.stringify(product));
   } else {
-    // Chuyển slug sang JSON
-    const slugJSON = JSON.parse(slugList);
-    if (slug in slugJSON) {
-      // Slug đã tồn tại => lấy dữ liệu từ redis
-      dataFromRedis = true;
-      product = slugJSON[slug];
-    } else {
-      // Slug chưa tồn tại => thêm vào redis
-      product = await Product.findOne({
-        slug: slug,
-        deleted: false,
-        status: "active",
-      }).lean();
-      product["newPrice"] = (
-        (1 - product.discountPercentage / 100) *
-        product.price
-      ).toFixed(2);
-      slugJSON[slug] = product;
-      await redisClient.set("slug", JSON.stringify(slugJSON));
-    }
+    // Nếu tồn tại, lấy dữ liệu từ redis
+    dataFromRedis = true;
+    product = await redisClient.get(slugKey);
   }
   console.log(
     dataFromRedis ? "Dữ liệu được lấy từ redis" : "Dữ liệu được lấy từ database"
@@ -103,3 +83,4 @@ module.exports.detail = async (req, res) => {
     return;
   }
 };
+
