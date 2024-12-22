@@ -19,8 +19,8 @@ module.exports.index = (app) => {
   app.use(category, cart, userInfor, setting);
   app.use("/", homeRoute);
   app.use("/cart", cartRoute);
-  app.use("/redis", redisRoute);
   app.use("/products", productRoute);
+  app.use("/redis", redisRoute);
   app.use("/search", searchRoute);
   app.use("/checkout", checkoutRoute);
   app.use("/user", userRoute);

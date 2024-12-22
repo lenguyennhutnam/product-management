@@ -32,7 +32,7 @@ module.exports.detail = async (req, res) => {
       (1 - product.discountPercentage / 100) *
       product.price
     ).toFixed(2);
-    await redisClient.set(slugKey, JSON.stringify(product));
+    await redisClient.set(slug, JSON.stringify(product));
   } else {
     // Nếu tồn tại, lấy dữ liệu từ redis
     dataFromRedis = true;
